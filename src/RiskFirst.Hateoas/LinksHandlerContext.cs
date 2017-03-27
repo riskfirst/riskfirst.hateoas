@@ -4,7 +4,7 @@ using System.Security.Claims;
 
 namespace RiskFirst.Hateoas
 {
-    public enum LinkRequirementSkipReason { Assertion, Authorization }
+    public enum LinkRequirementSkipReason { Assertion, Authorization, Error }
 
     public class LinksHandlerContext<TResource>
     {

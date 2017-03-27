@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 
@@ -11,6 +13,8 @@ namespace RiskFirst.Hateoas
             if (services == null)
                 throw new ArgumentNullException(nameof(services));
 
+            services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.TryAdd(ServiceDescriptor.Transient<IRouteMap, DefaultRouteMap>());
             services.TryAdd(ServiceDescriptor.Transient<ILinksHandlerContextFactory, DefaultLinksHandlerContextFactory>());
             services.TryAdd(ServiceDescriptor.Transient<ILinksPolicyProvider, DefaultLinksPolicyProvider>());

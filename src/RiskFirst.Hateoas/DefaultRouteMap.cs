@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,12 +15,15 @@ namespace RiskFirst.Hateoas
     public class DefaultRouteMap : IRouteMap
     {
         private readonly IActionContextAccessor contextAccessor;
+        private readonly ILogger<DefaultRouteMap> logger;
         private IDictionary<string, RouteInfo> RouteMap { get; } = new Dictionary<string, RouteInfo>();
-        public DefaultRouteMap(IActionContextAccessor contextAccessor)
+        public DefaultRouteMap(IActionContextAccessor contextAccessor, ILogger<DefaultRouteMap> logger)
         {
             this.contextAccessor = contextAccessor;
+            this.logger = logger;
 
-            var asm = this.GetType().GetTypeInfo().Assembly;
+            var asm = Assembly.GetEntryAssembly();
+           
             var controllers = asm.GetTypes()
                 .Where(type => typeof(Controller).IsAssignableFrom(type));
 
@@ -50,8 +54,10 @@ namespace RiskFirst.Hateoas
         public RouteInfo GetRoute(string name)
         {
             if (!RouteMap.ContainsKey(name))
-                throw new InvalidOperationException($"Invalid route specified: {name}");
-
+            {
+                logger.LogWarning("Invalid route specified. Unable to locate route: {RouteName}", name);
+                return null;
+            }
             return RouteMap[name];
         }
 

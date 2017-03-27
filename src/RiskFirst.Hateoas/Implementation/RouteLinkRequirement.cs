@@ -39,7 +39,11 @@ namespace RiskFirst.Hateoas.Implementation
             }
 
             var route = context.RouteMap.GetRoute(requirement.RouteName);
-
+            if(route == null)
+            {
+                context.Skipped(requirement, LinkRequirementSkipReason.Error);
+                return;
+            }
             var values = new RouteValueDictionary();
             if (requirement.GetRouteValues != null)
             {
