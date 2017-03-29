@@ -3,7 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "RiskFirst.Hateos", "src\RiskFirst.Hateoas\RiskFirst.Hateoas.xproj", "{AD523AB1-1548-4A2E-80F3-7B2997C60D65}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D6FDEF0A-6FBD-4BBB-98A1-FBF8572F819B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3572D51B-C414-452D-8E84-987B0533F2A6}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+	EndProjectSection
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "RiskFirst.Hateoas", "src\RiskFirst.Hateoas\RiskFirst.Hateoas.xproj", "{AD523AB1-1548-4A2E-80F3-7B2997C60D65}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,5 +25,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{AD523AB1-1548-4A2E-80F3-7B2997C60D65} = {D6FDEF0A-6FBD-4BBB-98A1-FBF8572F819B}
 	EndGlobalSection
 EndGlobal

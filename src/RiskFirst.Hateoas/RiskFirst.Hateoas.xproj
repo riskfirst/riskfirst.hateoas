@@ -9,7 +9,7 @@
     <ProjectGuid>ad523ab1-1548-4a2e-80f3-7b2997c60d65</ProjectGuid>
     <RootNamespace>RiskFirst.Hateoas</RootNamespace>
     <BaseIntermediateOutputPath Condition="'$(BaseIntermediateOutputPath)'=='' ">.\obj</BaseIntermediateOutputPath>
-    <OutputPath Condition="'$(OutputPath)'=='' ">.\bin\</OutputPath>
+    <OutputPath Condition="'$(OutputPath)'=='' ">bin</OutputPath>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup>

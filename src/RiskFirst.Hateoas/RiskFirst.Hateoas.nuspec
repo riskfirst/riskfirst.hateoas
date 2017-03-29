@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>RiskFirst.Hateoas</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>Jamie Cohen</authors>
+    <owners>RiskFirst</owners>
+    <licenseUrl>http://LICENSE_URL_HERE_OR_DELETE_THIS_LINE</licenseUrl>
+    <projectUrl>http://PROJECT_URL_HERE_OR_DELETE_THIS_LINE</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Some description</description>
+    <releaseNotes>INitial release.</releaseNotes>
+    <copyright>Copyright 2017</copyright>
+    <tags>HATEOAS webapi links</tags>
+  </metadata>
+</package>

@@ -9633,7 +9633,7 @@
       "Microsoft.Extensions.Logging.Debug >= 1.0.0",
       "Microsoft.Extensions.Options.ConfigurationExtensions >= 1.0.0",
       "Microsoft.NETCore.App >= 1.0.1",
-      "RiskFirst.Hateoas >= 1.0.0-*"
+      "RiskFirst.Hateoas >= 1.0.0"
     ],
     ".NETCoreApp,Version=v1.0": []
   },
