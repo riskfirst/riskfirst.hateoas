@@ -12,13 +12,20 @@ using RiskFirst.Hateoas.LinkConfigurationSample.Models;
 namespace RiskFirst.Hateoas.LinkConfigurationSample.Controllers
 {
     [Route("models")]
-    public class EntitiesController : Controller
+    public class ModelsController : Controller
     {
         [HttpGet("{model}")]
         public object GetEntity(string model)
         {
             var type = model.Replace("-",".");
             return type;
+        }
+        [HttpGet("{container}/of/{model}")]
+        public object GetContainerEntity(string container,string model)
+        {
+            var containerType = container.Replace("-", ".");
+            var modelType = model.Replace("-", ".");
+            return $"{containerType}<{modelType}>";
         }
     }
 }

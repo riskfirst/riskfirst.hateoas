@@ -16,19 +16,7 @@ namespace RiskFirst.Hateoas.Implementation
         public string RouteName { get; set; }
         public Func<TResource, RouteValueDictionary> GetRouteValues { get; set; }
         public LinkCondition<TResource> Condition { get; set; } = LinkCondition<TResource>.None;
-        public ILinksRequirement<T> Convert<T>() where T : class
-        {
-            return new RouteLinkRequirement<T>()
-            {
-                Id = this.Id,
-                GetRouteValues = this.GetRouteValues == null ? (Func<T, RouteValueDictionary>)null : r => this.GetRouteValues(r as TResource),
-                RouteName = this.RouteName,
-                Condition = new LinkCondition<T>(this.Condition.RequiresAuthorization,
-                                                this.Condition.Assertions.Select(a => new Func<T, bool>(x => a(x as TResource))),
-                                                this.Condition.Policies)
-            };
-        }
-
+        
         protected override async Task HandleRequirementAsync(LinksHandlerContext<TResource> context, RouteLinkRequirement<TResource> requirement)
         {
             var condition = requirement.Condition;
@@ -37,11 +25,16 @@ namespace RiskFirst.Hateoas.Implementation
                 context.Skipped(requirement, LinkRequirementSkipReason.Assertion);
                 return;
             }
+            if(String.IsNullOrEmpty(requirement.RouteName))
+            {
+                context.Skipped(requirement, LinkRequirementSkipReason.Error, $"Requirement did not have a RouteName specified for link: {requirement.Id}");
+                return;
+            }
 
             var route = context.RouteMap.GetRoute(requirement.RouteName);
             if(route == null)
             {
-                context.Skipped(requirement, LinkRequirementSkipReason.Error);
+                context.Skipped(requirement, LinkRequirementSkipReason.Error,$"No route was found for route name: {requirement.RouteName}");
                 return;
             }
             var values = new RouteValueDictionary();
@@ -66,15 +59,7 @@ namespace RiskFirst.Hateoas.Implementation
                 }
             }
 
-            context.Links.Add(new LinkSpec()
-            {
-                Id = requirement.Id,
-                Values = values,
-                RouteName = route.RouteName,
-                ReturnType = route.MethodInfo.ReturnType,
-                ControllerName = route.ControllerName,
-                Method = route.HttpMethod
-            });
+            context.Links.Add(new LinkSpec(requirement.Id, route, values));
             context.Handled(requirement);
         }
     }

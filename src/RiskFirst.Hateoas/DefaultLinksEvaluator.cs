@@ -15,14 +15,14 @@ namespace RiskFirst.Hateoas
         }
         public void BuildLinks(IEnumerable<LinkSpec> links, ILinkContainer container)
         {
-           foreach (var link in links)
+            foreach (var link in links)
             {
                 var context = contextFactory.CreateContext(link);
                 container.AddLink(link.Id, new Link()
                 {
-                    Href = options.HrefTransformation?.Transform(context),// linkHelper.GetHref(link),
-                    Rel = options.RelTransformation?.Transform(context),// linkHelper.GetRel(link),
-                    Method = link.Method.ToString()
+                    Href = options.HrefTransformation?.Transform(context),
+                    Rel = options.RelTransformation?.Transform(context),
+                    Method = link.HttpMethod.ToString()
                 });
             }
         }

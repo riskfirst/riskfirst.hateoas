@@ -9,68 +9,16 @@ namespace RiskFirst.Hateoas
 {
     public class LinkTransformationBuilder
     {
-        private IList<Func<LinkTransformationContext, string>> Transformations { get; } = new List<Func<LinkTransformationContext, string>>();
-        public LinkTransformationBuilder AddProtocol()
+        private IList<Func<LinkTransformationContext, string>> Transformations { get; } = new List<Func<LinkTransformationContext, string>>();        
+       
+        public LinkTransformationBuilder Add(string value)
         {
-            Transformations.Add(ctx => String.Concat(ctx.HttpContext.Request.Scheme, "://"));
+            Transformations.Add(ctx => value);
             return this;
         }
-
-        public LinkTransformationBuilder AddHost()
+        public LinkTransformationBuilder Add(Func<LinkTransformationContext,string> getValue)
         {
-            Transformations.Add(ctx => ctx.HttpContext.Request.Host.ToUriComponent());
-            return this;
-        }
-
-        public LinkTransformationBuilder AddRoutePath()
-        {
-            Transformations.Add(ctx =>
-            {
-                if (string.IsNullOrEmpty(ctx.LinkSpec.RouteName))
-                    throw new InvalidOperationException($"Invalid route specified in link specification.");
-
-                var valuesDictionary = GetValuesDictionary(ctx.LinkSpec.Values);
-                var virtualPathContext = new VirtualPathContext(ctx.HttpContext, ctx.RouteValues, valuesDictionary, ctx.LinkSpec.RouteName);
-                var virtualPathData = ctx.Router.GetVirtualPath(virtualPathContext);
-
-                return virtualPathData.VirtualPath;
-            });
-            
-            return this;
-        }
-        public LinkTransformationBuilder AddVirtualPath(string path)
-        {
-            AddVirtualPath(ctx => path);
-            return this;
-        }
-        public LinkTransformationBuilder AddVirtualPath(Func<LinkTransformationContext,string> getPath)
-        {
-            Transformations.Add(ctx =>
-            {
-                var path = getPath(ctx);
-                if (!path.StartsWith("/"))
-                    path = String.Concat("/", path);
-                return path;
-            });
-            return this;
-        }
-        public LinkTransformationBuilder AddQueryStringValues(IDictionary<string,string> values)
-        {
-            Transformations.Add(ctx =>
-            {
-                var queryString = String.Join("&", values.Select(v => $"{v.Key}={v.Value?.ToString()}"));
-                return string.Concat("?", queryString);
-            });
-            return this;
-        }
-        public LinkTransformationBuilder AddFragment(Func<LinkTransformationContext,string> getFragment)
-        {
-            Transformations.Add(ctx => string.Concat("#", getFragment(ctx)));
-            return this;
-        }
-        public LinkTransformationBuilder AddString(Func<LinkTransformationContext,string> getString)
-        {
-            Transformations.Add(getString);
+            Transformations.Add(getValue);
             return this;
         }
 
@@ -79,27 +27,6 @@ namespace RiskFirst.Hateoas
             return new BuilderLinkTransformation(Transformations);
         }
         
-        private static RouteValueDictionary GetValuesDictionary(object values)
-        {
-            var routeValuesDictionary = values as RouteValueDictionary;
-            if (routeValuesDictionary != null)
-            {                
-                return routeValuesDictionary;
-            }
-
-            var dictionaryValues = values as IDictionary<string, object>;
-            if (dictionaryValues != null)
-            {
-                routeValuesDictionary = new RouteValueDictionary();
-                foreach (var kvp in dictionaryValues)
-                {
-                    routeValuesDictionary.Add(kvp.Key, kvp.Value);
-                }
-
-                return routeValuesDictionary;
-            }
-
-            return new RouteValueDictionary(values);
-        }
+       
     }
 }

@@ -7,7 +7,7 @@ using System.Security.Claims;
 
 namespace RiskFirst.Hateoas
 {
-    public enum LinkRequirementSkipReason { Assertion, Authorization, Error }
+    public enum LinkRequirementSkipReason { Assertion, Authorization, Error, Custom }
 
     public class LinksHandlerContext<TResource>
     {
@@ -67,10 +67,21 @@ namespace RiskFirst.Hateoas
         {
             pendingRequirements.Remove(requirement);
         }
-
+        public void Skipped(ILinksRequirement requirement)
+        {
+            Skipped(requirement, LinkRequirementSkipReason.Custom,String.Empty);
+        }
+        public void Skipped(ILinksRequirement requirement, string message)
+        {
+            Skipped(requirement, LinkRequirementSkipReason.Custom, message);
+        }
         public void Skipped(ILinksRequirement requirement, LinkRequirementSkipReason reason)
         {
-            Logger.LogInformation("Link {Requirement} skipped for user {User}. Reason: {LinkSkipReason}", requirement, User.Identity, reason);
+            Skipped(requirement, reason, String.Empty);
+        }
+        public void Skipped(ILinksRequirement requirement, LinkRequirementSkipReason reason, string message)
+        {
+            Logger.LogInformation("Link {Requirement} skipped for user {User}. Reason: {LinkSkipReason}. {Message}.", requirement, User.Identity, reason,message);
             pendingRequirements.Remove(requirement);
         }
 

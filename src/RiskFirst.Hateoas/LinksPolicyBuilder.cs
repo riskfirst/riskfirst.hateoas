@@ -16,7 +16,7 @@ namespace RiskFirst.Hateoas
         public LinksPolicyBuilder<TResource> Requires<TRequirement>()
             where TRequirement : ILinksRequirement<TResource>, new()
         {
-            Requires(new TRequirement());
+            Requirements.Add(new TRequirement());
             return this;
         }
         public LinksPolicyBuilder<TResource> Requires<TRequirement>(TRequirement requirement)
@@ -24,8 +24,7 @@ namespace RiskFirst.Hateoas
         {
             Requirements.Add(requirement);
             return this;
-        }      
-       
+        }             
 
         public LinksPolicy<TResource> Build()
         {

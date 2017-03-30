@@ -16,7 +16,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "RiskFirst.Hateoas.BasicSample": {
+    "RiskFirst.Hateoas.LinkConfigurationExample": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "http://localhost:5000/api/values",

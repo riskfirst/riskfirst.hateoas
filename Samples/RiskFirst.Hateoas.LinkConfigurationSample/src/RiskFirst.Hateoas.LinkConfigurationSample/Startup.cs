@@ -11,6 +11,7 @@ using RiskFirst.Hateoas.LinkConfigurationSample.Models;
 using RiskFirst.Hateoas.Models;
 using RiskFirst.Hateoas.LinkConfigurationSample.Repository;
 using System.Reflection;
+using RiskFirst.Hateoas.LinkConfigurationSample.Extensions;
 
 namespace RiskFirst.Hateoas.LinkConfigurationSample
 {
@@ -32,11 +33,12 @@ namespace RiskFirst.Hateoas.LinkConfigurationSample
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddLinks(config =>
-            {                
+            {
+                // Uncomment out one of the two lines below to see how to configure the rel value of links to contain a uri to the returned model
+                // 
+                //config.ConfigureRelTransformation(transform => transform.AddProtocol().AddHost().AddModelPath());
+                //config.UseRelTransformation<ModelRelTransformation>();
 
-                config.ConfigureRel(transform => transform.AddProtocol().AddHost()
-                                .AddVirtualPath(ctx => $"models/{ctx.LinkSpec.ReturnType.Namespace.Replace(".", "-")}-{ctx.LinkSpec.ReturnType.Name}"));
-            
                 config.AddPolicy<ValueInfo>(policy =>
                 {
                     policy.RequireRoutedLink("self", "GetValueByIdRoute", x => new { id = x.Id });
