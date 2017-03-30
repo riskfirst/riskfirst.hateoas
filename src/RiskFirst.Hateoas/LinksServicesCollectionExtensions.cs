@@ -14,11 +14,11 @@ namespace RiskFirst.Hateoas
                 throw new ArgumentNullException(nameof(services));
 
             services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
-            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            //services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.TryAdd(ServiceDescriptor.Transient<IRouteMap, DefaultRouteMap>());
             services.TryAdd(ServiceDescriptor.Transient<ILinksHandlerContextFactory, DefaultLinksHandlerContextFactory>());
             services.TryAdd(ServiceDescriptor.Transient<ILinksPolicyProvider, DefaultLinksPolicyProvider>());
-            services.TryAdd(ServiceDescriptor.Transient<ILinkHelper, DefaultLinkHelper>());
+            services.TryAdd(ServiceDescriptor.Transient<ILinkTransformationContextFactory, DefaultLinkTransformationContextFactory>());
             services.TryAdd(ServiceDescriptor.Transient<ILinksEvaluator, DefaultLinksEvaluator>());
             services.TryAdd(ServiceDescriptor.Transient<ILinkAuthorizationService, DefaultLinkAuthorizationService>());
             services.TryAdd(ServiceDescriptor.Transient<ILinksService, DefaultLinksService>());

@@ -5,6 +5,6 @@ namespace RiskFirst.Hateoas
 {
     public interface ILinksEvaluator
     {
-        void BuildLinks(IEnumerable<LinkSpec> links, ILinkContainer container);
+        void BuildLinks(IEnumerable<ILinkSpec> links, ILinkContainer container);
     }
 }

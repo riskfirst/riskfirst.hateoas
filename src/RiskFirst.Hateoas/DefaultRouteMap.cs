@@ -43,19 +43,14 @@ namespace RiskFirst.Hateoas
             foreach (var attr in attributes.Where(a => !String.IsNullOrWhiteSpace(a.HttpAttribute.Name)))
             {
                 var method = ParseMethod(attr.HttpAttribute.HttpMethods);
-                RouteMap[attr.HttpAttribute.Name] = new RouteInfo(attr.HttpAttribute.Name, method, attr.Method, attr.Controller);
+                RouteMap[attr.HttpAttribute.Name] = new RouteInfo(attr.HttpAttribute.Name, method, attr.Method);
             }
         }
-
-        public RouteValueDictionary GetCurrentRouteValues()
-        {
-            return contextAccessor.ActionContext?.RouteData?.Values;
-        }
+                
         public RouteInfo GetRoute(string name)
         {
             if (!RouteMap.ContainsKey(name))
             {
-                logger.LogWarning("Invalid route specified. Unable to locate route: {RouteName}", name);
                 return null;
             }
             return RouteMap[name];
@@ -63,13 +58,12 @@ namespace RiskFirst.Hateoas
 
         public RouteInfo GetCurrentRoute()
         {
-            var action = this.contextAccessor.ActionContext.ActionDescriptor as ControllerActionDescriptor;
+            var action = this.contextAccessor?.ActionContext?.ActionDescriptor as ControllerActionDescriptor;
             if (action == null)
                 throw new InvalidOperationException($"Invalid action descriptor in route map");
             var attr = action.MethodInfo.GetCustomAttribute<HttpMethodAttribute>();
-            var policies = action.MethodInfo.GetCustomAttributes<LinksAttribute>().Where(a => !String.IsNullOrEmpty(a.Policy)).Select(a => a.Policy).ToArray();
             var method = ParseMethod(attr.HttpMethods);
-            return new RouteInfo(attr.Name, method, action.MethodInfo, action.MethodInfo.DeclaringType);
+            return new RouteInfo(attr.Name, method, action.MethodInfo);
         }
 
         private HttpMethod ParseMethod(IEnumerable<string> methods)

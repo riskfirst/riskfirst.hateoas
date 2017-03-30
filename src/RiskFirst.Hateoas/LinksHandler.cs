@@ -5,18 +5,10 @@ using System.Threading.Tasks;
 
 namespace RiskFirst.Hateoas
 {
-    public abstract class LinksHandler<TRequirement, TResource> : ILinksHandler<TResource>
+    public abstract class LinksHandler<TRequirement, TResource> : ILinksHandler
         where TRequirement : ILinksRequirement
         where TResource : class
     {
-
-        public async Task HandleAsync(LinksHandlerContext<TResource> context)
-        {
-            foreach (var req in context.Requirements.OfType<TRequirement>())
-            {
-                await HandleRequirementAsync(context, req);
-            }
-        }
 
         public async Task HandleAsync<T>(LinksHandlerContext<T> context)
         {
@@ -25,7 +17,13 @@ namespace RiskFirst.Hateoas
 
             await HandleAsync(context as LinksHandlerContext<TResource>);
         }
-
+        protected virtual async Task HandleAsync(LinksHandlerContext<TResource> context)
+        {
+            foreach (var req in context.Requirements.OfType<TRequirement>())
+            {
+                await HandleRequirementAsync(context, req);
+            }
+        }
         protected abstract Task HandleRequirementAsync(LinksHandlerContext<TResource> context, TRequirement requirement);
     }
 }

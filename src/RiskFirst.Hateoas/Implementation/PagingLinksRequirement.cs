@@ -19,20 +19,7 @@ namespace RiskFirst.Hateoas.Implementation
         public string NextId { get; set; }
         public string PreviousId { get; set; }
         public LinkCondition<TResource> Condition { get; set; } = LinkCondition<TResource>.None;
-
-        public ILinksRequirement<T> Convert<T>() where T : class
-        {
-            return new PagingLinksRequirement<T>()
-            {
-                CurrentId = this.CurrentId,
-                NextId = this.NextId,
-                PreviousId = this.PreviousId,
-                Condition = new LinkCondition<T>(this.Condition.RequiresAuthorization,
-                                                this.Condition.Assertions.Select(a => new Func<T, bool>(x => a(x as TResource))),
-                                                this.Condition.Policies)
-            };
-        }
-
+        
         protected override async Task HandleRequirementAsync(LinksHandlerContext<TResource> context, PagingLinksRequirement<TResource> requirement)
         {
             var condition = requirement.Condition;
@@ -47,13 +34,13 @@ namespace RiskFirst.Hateoas.Implementation
                 throw new InvalidOperationException($"PagingLinkRequirement can only be used by a resource of type IPageLinkContainer. Type: {context.Resource.GetType().FullName}");
 
             var route = context.RouteMap.GetCurrentRoute();
-            var values = context.RouteMap.GetCurrentRouteValues();
+            var values = context.CurrentRouteValues;
 
             if (condition != null && condition.RequiresAuthorization)
             {
                 var authContext = new LinkAuthorizationContext<TResource>(
                     condition.RequiresRouteAuthorization,
-                    condition.Policies,
+                    condition.AuthorizationRequirements,
                     route,
                     values,
                     context.Resource,
@@ -66,37 +53,17 @@ namespace RiskFirst.Hateoas.Implementation
                 }
             }
 
-            context.Links.Add(new LinkSpec()
-            {
-                Id = requirement.CurrentId,
-                RouteName = route.RouteName,
-                ControllerName = route.ControllerName,
-                Values = GetPageValues(values, pagingResource.PageNumber, pagingResource.PageSize),
-                Method = route.HttpMethod
-            });
+            context.Links.Add(new LinkSpec(requirement.CurrentId, route, GetPageValues(values, pagingResource.PageNumber, pagingResource.PageSize)));
+
             var addPrevLink = ShouldAddPreviousPageLink(pagingResource.PageNumber);
             var addNextLink = ShouldAddNextPageLink(pagingResource.PageNumber, pagingResource.PageCount);
             if (addPrevLink)
             {
-                context.Links.Add(new LinkSpec()
-                {
-                    Id = requirement.PreviousId,
-                    RouteName = route.RouteName,
-                    ControllerName = route.ControllerName,
-                    Values = GetPageValues(values, pagingResource.PageNumber - 1, pagingResource.PageSize),
-                    Method = route.HttpMethod
-                });
+                context.Links.Add(new LinkSpec(requirement.PreviousId, route, GetPageValues(values, pagingResource.PageNumber - 1, pagingResource.PageSize)));
             }
             if (addNextLink)
             {
-                context.Links.Add(new LinkSpec()
-                {
-                    Id = requirement.NextId,
-                    RouteName = route.RouteName,
-                    ControllerName = route.ControllerName,
-                    Values = GetPageValues(values, pagingResource.PageNumber + 1, pagingResource.PageSize),
-                    Method = route.HttpMethod
-                });
+                context.Links.Add(new LinkSpec(requirement.NextId, route, GetPageValues(values, pagingResource.PageNumber + 1, pagingResource.PageSize)));
             }
             context.Handled(requirement);
             return;

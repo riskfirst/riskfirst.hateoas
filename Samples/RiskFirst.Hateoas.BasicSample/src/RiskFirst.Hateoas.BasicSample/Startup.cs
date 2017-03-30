@@ -10,11 +10,12 @@ using Microsoft.Extensions.Logging;
 using RiskFirst.Hateoas.BasicSample.Models;
 using RiskFirst.Hateoas.Models;
 using RiskFirst.Hateoas.BasicSample.Repository;
+using System.Reflection;
 
 namespace RiskFirst.Hateoas.BasicSample
 {
     public class Startup
-    {
+    {       
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -32,11 +33,29 @@ namespace RiskFirst.Hateoas.BasicSample
         {
             services.AddLinks(config =>
             {
+                // Uncomment the next line to use relative hrefs instead of absolute
+                //config.UseRelativeHrefs();
+
+                config.ConfigureRel(transform => transform.AddProtocol().AddHost()
+
+                //.AddVirtualPath(ctx => {
+                //    var returnType = ctx.LinkSpec.ReturnType;
+                //    if(returnType.GetTypeInfo().IsGenericType && returnType.GetGenericTypeDefinition().IsAssignableFrom(typeof(Task<>)))
+                //    {
+                //        var type = returnType.GetGenericArguments()[0];
+                //        return $"entities/{type.Namespace.Replace(".", "-")}-{type.Name}"; 
+                //    }
+                //    return $"entities/{returnType.Namespace.Replace(".", "-")}-{returnType.Name}"; ;
+                //})
+                .AddVirtualPath("api-docs").AddFragment(ctx => $"!/{ctx.LinkSpec.ControllerName}/{ctx.LinkSpec.RouteName}")
+
+
+                );
+            
                 config.AddPolicy<ValueInfo>(policy =>
                 {
                     policy.RequireRoutedLink("self", "GetValueByIdRoute", x => new { id = x.Id });
                 });
-
                 config.AddPolicy<ValueInfo>("FullInfoPolicy",policy =>
                 {
                     policy.RequireSelfLink()

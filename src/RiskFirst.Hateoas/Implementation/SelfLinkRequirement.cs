@@ -12,27 +12,13 @@ namespace RiskFirst.Hateoas.Implementation
         }
 
         public string Id { get; set; }
-
-        public ILinksRequirement<T> Convert<T>() where T : class
-        {
-            return new SelfLinkRequirement<T>()
-            {
-                Id = this.Id
-            };
-        }
+       
         protected override Task HandleRequirementAsync(LinksHandlerContext<TResource> context, SelfLinkRequirement<TResource> requirement)
         {
             var route = context.RouteMap.GetCurrentRoute();
-            var values = context.RouteMap.GetCurrentRouteValues();
+            var values = context.CurrentRouteValues;
 
-            context.Links.Add(new LinkSpec()
-            {
-                Id = requirement.Id,
-                RouteName = route.RouteName,
-                ControllerName = route.ControllerName,
-                Values = values,
-                Method = route.HttpMethod
-            });
+            context.Links.Add(new LinkSpec(requirement.Id, route, values));
             context.Handled(requirement);
             return Task.CompletedTask;
         }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Authorization;
+using System;
 using System.Collections.Generic;
 
 namespace RiskFirst.Hateoas
@@ -7,7 +8,7 @@ namespace RiskFirst.Hateoas
     {
 
         private bool requiresRouteAuthorization = false;
-        private IList<string> policies = new List<string>();
+        private List<IAuthorizationRequirement> authRequirements = new List<IAuthorizationRequirement>();
         private IList<Func<TResource, bool>> assertions = new List<Func<TResource, bool>>();
         public LinkConditionBuilder()
         {
@@ -18,10 +19,14 @@ namespace RiskFirst.Hateoas
             this.requiresRouteAuthorization = true;
             return this;
         }
-
-        public LinkConditionBuilder<TResource> AuthorizePolicy(string policy)
+        public LinkConditionBuilder<TResource> AuthorizeRequirements(params IAuthorizationRequirement [] requirements)
         {
-            policies.Add(policy);
+            authRequirements.AddRange(requirements);
+            return this;
+        }
+        public LinkConditionBuilder<TResource> AuthorizePolicy(AuthorizationPolicy policy)
+        {
+            authRequirements.AddRange(policy.Requirements);
             return this;
         }
 
@@ -34,7 +39,7 @@ namespace RiskFirst.Hateoas
 
         public LinkCondition<TResource> Build()
         {
-            return new LinkCondition<TResource>(this.requiresRouteAuthorization, this.assertions, this.policies);
+            return new LinkCondition<TResource>(this.requiresRouteAuthorization, this.assertions, this.authRequirements);
         }
     }
 }

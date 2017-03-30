@@ -1,10 +1,13 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 
 namespace RiskFirst.Hateoas
 {
-    public enum LinkRequirementSkipReason { Assertion, Authorization, Error }
+    public enum LinkRequirementSkipReason { Assertion, Authorization, Error, Custom }
 
     public class LinksHandlerContext<TResource>
     {
@@ -14,7 +17,8 @@ namespace RiskFirst.Hateoas
             IEnumerable<ILinksRequirement> requirements,
             IRouteMap routeMap,
             ILinkAuthorizationService authService,
-            ClaimsPrincipal user,
+            ILogger<LinksHandlerContext<TResource>> logger,
+            ActionContext actionContext,
             TResource resource)
         {
             if (requirements == null)
@@ -23,18 +27,25 @@ namespace RiskFirst.Hateoas
                 throw new ArgumentNullException(nameof(routeMap));
             if (authService == null)
                 throw new ArgumentNullException(nameof(authService));
-            if (user == null)
-                throw new ArgumentNullException(nameof(user));
+            if (logger == null)
+                throw new ArgumentNullException(nameof(logger));
+            if (actionContext == null)
+                throw new ArgumentNullException(nameof(actionContext));
             if (resource == null)
                 throw new ArgumentNullException(nameof(resource));
 
             this.Requirements = requirements;
             this.RouteMap = routeMap;
             this.Authorization = authService;
-            this.User = user;
+            this.ActionContext = actionContext;
             this.Resource = resource;
+            this.Logger = logger;
             this.pendingRequirements = new HashSet<ILinksRequirement>(requirements);
         }
+
+        public ActionContext ActionContext { get; }
+
+        public ILogger<LinksHandlerContext<TResource>> Logger { get; set; }
 
         public virtual TResource Resource { get; }
 
@@ -44,9 +55,11 @@ namespace RiskFirst.Hateoas
 
         public virtual IRouteMap RouteMap { get; }
 
-        public virtual ClaimsPrincipal User { get; }
+        public ClaimsPrincipal User => ActionContext?.HttpContext?.User;
 
-        public virtual IList<LinkSpec> Links { get; } = new List<LinkSpec>();
+        public RouteValueDictionary CurrentRouteValues => ActionContext?.RouteData?.Values;
+
+        public virtual IList<ILinkSpec> Links { get; } = new List<ILinkSpec>();
 
         public virtual ILinkAuthorizationService Authorization { get; }
 
@@ -54,10 +67,27 @@ namespace RiskFirst.Hateoas
         {
             pendingRequirements.Remove(requirement);
         }
-
+        public void Skipped(ILinksRequirement requirement)
+        {
+            Skipped(requirement, LinkRequirementSkipReason.Custom,String.Empty);
+        }
+        public void Skipped(ILinksRequirement requirement, string message)
+        {
+            Skipped(requirement, LinkRequirementSkipReason.Custom, message);
+        }
         public void Skipped(ILinksRequirement requirement, LinkRequirementSkipReason reason)
         {
+            Skipped(requirement, reason, String.Empty);
+        }
+        public void Skipped(ILinksRequirement requirement, LinkRequirementSkipReason reason, string message)
+        {
+            Logger.LogInformation("Link {Requirement} skipped for user {User}. Reason: {LinkSkipReason}. {Message}.", requirement, User.Identity, reason,message);
             pendingRequirements.Remove(requirement);
+        }
+
+        public bool IsSuccess()
+        {
+            return pendingRequirements.Count == 0;
         }
 
     }
