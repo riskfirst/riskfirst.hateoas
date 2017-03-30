@@ -23,12 +23,13 @@ namespace RiskFirst.Hateoas.Implementation
         protected override Task HandleRequirementAsync(LinksHandlerContext<TResource> context, SelfLinkRequirement<TResource> requirement)
         {
             var route = context.RouteMap.GetCurrentRoute();
-            var values = context.RouteMap.GetCurrentRouteValues();
+            var values = context.CurrentRouteValues;
 
             context.Links.Add(new LinkSpec()
             {
                 Id = requirement.Id,
                 RouteName = route.RouteName,
+                ReturnType = route.MethodInfo.ReturnType,
                 ControllerName = route.ControllerName,
                 Values = values,
                 Method = route.HttpMethod

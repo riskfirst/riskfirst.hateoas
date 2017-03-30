@@ -1,4 +1,5 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 
 namespace RiskFirst.Hateoas
 {
@@ -7,6 +8,7 @@ namespace RiskFirst.Hateoas
         public string Id { get; set; }
         public string RouteName { get; set; }
         public string ControllerName { get; set; }
+        public Type ReturnType { get; set; }
         public object Values { get; set; }
         public HttpMethod Method { get; set; }
     }

@@ -7,12 +7,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using RiskFirst.Hateoas.BasicSample.Models;
+using RiskFirst.Hateoas.LinkConfigurationSample.Models;
 using RiskFirst.Hateoas.Models;
-using RiskFirst.Hateoas.BasicSample.Repository;
+using RiskFirst.Hateoas.LinkConfigurationSample.Repository;
 using System.Reflection;
 
-namespace RiskFirst.Hateoas.BasicSample
+namespace RiskFirst.Hateoas.LinkConfigurationSample
 {
     public class Startup
     {       
@@ -32,25 +32,10 @@ namespace RiskFirst.Hateoas.BasicSample
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddLinks(config =>
-            {
-                // Uncomment the next line to use relative hrefs instead of absolute
-                //config.UseRelativeHrefs();
+            {                
 
                 config.ConfigureRel(transform => transform.AddProtocol().AddHost()
-
-                //.AddVirtualPath(ctx => {
-                //    var returnType = ctx.LinkSpec.ReturnType;
-                //    if(returnType.GetTypeInfo().IsGenericType && returnType.GetGenericTypeDefinition().IsAssignableFrom(typeof(Task<>)))
-                //    {
-                //        var type = returnType.GetGenericArguments()[0];
-                //        return $"entities/{type.Namespace.Replace(".", "-")}-{type.Name}"; 
-                //    }
-                //    return $"entities/{returnType.Namespace.Replace(".", "-")}-{returnType.Name}"; ;
-                //})
-                .AddVirtualPath("api-docs").AddFragment(ctx => $"!/{ctx.LinkSpec.ControllerName}/{ctx.LinkSpec.RouteName}")
-
-
-                );
+                                .AddVirtualPath(ctx => $"models/{ctx.LinkSpec.ReturnType.Namespace.Replace(".", "-")}-{ctx.LinkSpec.ReturnType.Name}"));
             
                 config.AddPolicy<ValueInfo>(policy =>
                 {

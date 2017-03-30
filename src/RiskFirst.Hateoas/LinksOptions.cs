@@ -36,5 +36,28 @@ namespace RiskFirst.Hateoas
                 throw new ArgumentException("Policy name cannot be null", nameof(name));
             return PolicyMap.ContainsKey(name) ? PolicyMap[name] as ILinksPolicy<TResource> : null;
         }
+
+        public ILinkTransformation HrefTransformation { get; set; } = new LinkTransformationBuilder().AddProtocol().AddHost().AddRoutePath().Build();            
+
+        public void ConfigureHref(Action<LinkTransformationBuilder> configureTransform)
+        {
+            var builder = new LinkTransformationBuilder();
+            configureTransform(builder);
+            this.HrefTransformation = builder.Build();
+        }
+
+        public void UseRelativeHrefs()
+        {
+            HrefTransformation = new LinkTransformationBuilder().AddRoutePath().Build();
+        }
+
+        public ILinkTransformation RelTransformation { get; set; } = new LinkTransformationBuilder().AddString(ctx => $"{ctx.LinkSpec.ControllerName}/{ctx.LinkSpec.RouteName}").Build();
+       
+        public void ConfigureRel(Action<LinkTransformationBuilder> configureTransform)
+        {
+            var builder = new LinkTransformationBuilder();
+            configureTransform(builder);
+            this.RelTransformation = builder.Build();
+        }
     }
 }

@@ -71,6 +71,7 @@ namespace RiskFirst.Hateoas.Implementation
                 Id = requirement.Id,
                 Values = values,
                 RouteName = route.RouteName,
+                ReturnType = route.MethodInfo.ReturnType,
                 ControllerName = route.ControllerName,
                 Method = route.HttpMethod
             });

@@ -47,7 +47,7 @@ namespace RiskFirst.Hateoas.Implementation
                 throw new InvalidOperationException($"PagingLinkRequirement can only be used by a resource of type IPageLinkContainer. Type: {context.Resource.GetType().FullName}");
 
             var route = context.RouteMap.GetCurrentRoute();
-            var values = context.RouteMap.GetCurrentRouteValues();
+            var values = context.CurrentRouteValues;
 
             if (condition != null && condition.RequiresAuthorization)
             {
@@ -70,6 +70,7 @@ namespace RiskFirst.Hateoas.Implementation
             {
                 Id = requirement.CurrentId,
                 RouteName = route.RouteName,
+                ReturnType = route.MethodInfo.ReturnType,
                 ControllerName = route.ControllerName,
                 Values = GetPageValues(values, pagingResource.PageNumber, pagingResource.PageSize),
                 Method = route.HttpMethod
@@ -82,6 +83,7 @@ namespace RiskFirst.Hateoas.Implementation
                 {
                     Id = requirement.PreviousId,
                     RouteName = route.RouteName,
+                    ReturnType = route.MethodInfo.ReturnType,
                     ControllerName = route.ControllerName,
                     Values = GetPageValues(values, pagingResource.PageNumber - 1, pagingResource.PageSize),
                     Method = route.HttpMethod
@@ -93,6 +95,7 @@ namespace RiskFirst.Hateoas.Implementation
                 {
                     Id = requirement.NextId,
                     RouteName = route.RouteName,
+                    ReturnType = route.MethodInfo.ReturnType,
                     ControllerName = route.ControllerName,
                     Values = GetPageValues(values, pagingResource.PageNumber + 1, pagingResource.PageSize),
                     Method = route.HttpMethod

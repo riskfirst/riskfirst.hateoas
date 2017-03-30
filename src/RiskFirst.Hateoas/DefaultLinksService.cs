@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using RiskFirst.Hateoas.Models;
 using System;
 using System.Collections.Generic;
@@ -11,17 +12,20 @@ namespace RiskFirst.Hateoas
     public class DefaultLinksService : ILinksService
     {
         private readonly LinksOptions options;
+        private readonly ILogger<DefaultLinksService> logger;
         private readonly ILinksHandlerContextFactory contextFactory;
         private readonly ILinksPolicyProvider policyProvider;
         private readonly IList<ILinksHandler> handlers;
         private readonly IRouteMap routeMap;
         private readonly ILinksEvaluator evaluator;
 
-        public DefaultLinksService(IOptions<LinksOptions> options, ILinksHandlerContextFactory contextFactory,
+        public DefaultLinksService(IOptions<LinksOptions> options, ILogger<DefaultLinksService> logger, ILinksHandlerContextFactory contextFactory,
             ILinksPolicyProvider policyProvider, IEnumerable<ILinksHandler> handlers, IRouteMap routeMap, ILinksEvaluator evaluator)
         {
             if (options == null)
                 throw new ArgumentNullException(nameof(options));
+            if (logger == null)
+                throw new ArgumentNullException(nameof(logger));
             if (contextFactory == null)
                 throw new ArgumentNullException(nameof(contextFactory));
             if (policyProvider == null)
@@ -34,6 +38,7 @@ namespace RiskFirst.Hateoas
                 throw new ArgumentNullException(nameof(evaluator));
 
             this.options = options.Value;
+            this.logger = logger;
             this.contextFactory = contextFactory;
             this.policyProvider = policyProvider;
             this.handlers = handlers.ToArray();
@@ -101,13 +106,23 @@ namespace RiskFirst.Hateoas
             if (requirements == null)
                 throw new ArgumentNullException(nameof(requirements));
 
+            logger.LogInformation("Applying links to {ResourceType} using requirements {Requirements}", typeof(TResource).FullName, requirements);
+
+            var sw = new System.Diagnostics.Stopwatch();
+            sw.Start();
             var ctx = contextFactory.CreateContext(requirements, linkContainer);
             foreach (var handler in handlers)
             {
                 await handler.HandleAsync(ctx);
             }
-
+            if(!ctx.IsSuccess())
+            {
+                logger.LogWarning("Not all links were handled correctly for resource {ResourceType}. Unhandled requirements: {PendingRequirements}", typeof(TResource).FullName, ctx.PendingRequirements.ToArray());
+            }
             evaluator.BuildLinks(ctx.Links, linkContainer);
+            sw.Stop();
+
+            logger.LogInformation("Applied links to {ResourceType} in {ElapsedMilliseconds}ms", typeof(TResource).FullName, sw.ElapsedMilliseconds);
         }
 
 

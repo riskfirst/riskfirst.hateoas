@@ -46,11 +46,7 @@ namespace RiskFirst.Hateoas
                 RouteMap[attr.HttpAttribute.Name] = new RouteInfo(attr.HttpAttribute.Name, method, attr.Method, attr.Controller);
             }
         }
-
-        public RouteValueDictionary GetCurrentRouteValues()
-        {
-            return contextAccessor.ActionContext?.RouteData?.Values;
-        }
+                
         public RouteInfo GetRoute(string name)
         {
             if (!RouteMap.ContainsKey(name))
