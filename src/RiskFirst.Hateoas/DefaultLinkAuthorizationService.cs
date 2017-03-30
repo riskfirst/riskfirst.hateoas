@@ -28,15 +28,17 @@ namespace RiskFirst.Hateoas
                 foreach (var authAttr in authAttrs)
                 {
                     if (!await AuthorizeData(authAttr, context.User, context.RouteValues))
+                    {
                         return false;
-                    return true;
+                    }
                 }
             }
-
-            foreach (var policy in context.AuthorizePolicies)
+            if (context.AuthorizationRequirements.Any())
             {
-                if (!await AuthorizePolicy(policy, context.User, context.Resource))
+                if (!await authService.AuthorizeAsync(context.User, context.Resource, context.AuthorizationRequirements))
+                {
                     return false;
+                }
             }
             return true;
         }
@@ -59,12 +61,7 @@ namespace RiskFirst.Hateoas
             }
             return true;
         }
-
-        protected virtual async Task<bool> AuthorizePolicy<TResource>(string policy, ClaimsPrincipal user, TResource resource)
-        {
-            return await authService.AuthorizeAsync(user, resource, policy);
-        }
-
+               
         protected virtual IEnumerable<IAuthorizeData> GetRouteAuthorizationInfo(RouteInfo routeInfo)
         {
             return routeInfo.MethodInfo.GetCustomAttributes<AuthorizeAttribute>()

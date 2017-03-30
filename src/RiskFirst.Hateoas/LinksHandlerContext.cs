@@ -59,7 +59,7 @@ namespace RiskFirst.Hateoas
 
         public RouteValueDictionary CurrentRouteValues => ActionContext?.RouteData?.Values;
 
-        public virtual IList<LinkSpec> Links { get; } = new List<LinkSpec>();
+        public virtual IList<ILinkSpec> Links { get; } = new List<ILinkSpec>();
 
         public virtual ILinkAuthorizationService Authorization { get; }
 

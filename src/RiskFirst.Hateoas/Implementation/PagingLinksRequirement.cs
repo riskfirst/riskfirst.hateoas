@@ -40,7 +40,7 @@ namespace RiskFirst.Hateoas.Implementation
             {
                 var authContext = new LinkAuthorizationContext<TResource>(
                     condition.RequiresRouteAuthorization,
-                    condition.Policies,
+                    condition.AuthorizationRequirements,
                     route,
                     values,
                     context.Resource,

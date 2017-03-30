@@ -9,7 +9,7 @@ namespace RiskFirst.Hateoas.Implementation
     {
         public async Task HandleAsync<T>(LinksHandlerContext<T> context)
         {
-            foreach (var handler in context.Requirements.OfType<ILinksHandler<T>>())
+            foreach (var handler in context.Requirements.OfType<ILinksHandler>())
             {
                 if (context.PendingRequirements.Contains((ILinksRequirement)handler))
                     await handler.HandleAsync(context);

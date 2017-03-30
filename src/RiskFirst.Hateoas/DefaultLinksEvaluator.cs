@@ -13,7 +13,7 @@ namespace RiskFirst.Hateoas
             this.options = options.Value;
             this.contextFactory = contextFactory;
         }
-        public void BuildLinks(IEnumerable<LinkSpec> links, ILinkContainer container)
+        public void BuildLinks(IEnumerable<ILinkSpec> links, ILinkContainer container)
         {
             foreach (var link in links)
             {

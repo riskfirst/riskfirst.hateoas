@@ -16,7 +16,7 @@ namespace RiskFirst.Hateoas
             this.actionAccessor = actionAccessor;
             this.loggerFactory = loggerFactory;
         }
-        public LinkTransformationContext CreateContext(LinkSpec spec)
+        public LinkTransformationContext CreateContext(ILinkSpec spec)
         {
             return new LinkTransformationContext(spec,actionAccessor.ActionContext);
         }

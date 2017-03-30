@@ -4,7 +4,16 @@ using System.Net.Http;
 
 namespace RiskFirst.Hateoas
 {
-    public struct LinkSpec
+    public interface ILinkSpec
+    {
+        string Id { get; }
+        RouteInfo RouteInfo { get; }
+        RouteValueDictionary RouteValues { get; }
+        HttpMethod HttpMethod { get; }
+        string RouteName { get; }
+        string ControllerName { get; }
+    }
+    public struct LinkSpec : ILinkSpec
     {
         public LinkSpec(string id, RouteInfo routeInfo, RouteValueDictionary routeValues)
         {

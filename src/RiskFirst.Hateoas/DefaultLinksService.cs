@@ -19,8 +19,14 @@ namespace RiskFirst.Hateoas
         private readonly IRouteMap routeMap;
         private readonly ILinksEvaluator evaluator;
 
-        public DefaultLinksService(IOptions<LinksOptions> options, ILogger<DefaultLinksService> logger, ILinksHandlerContextFactory contextFactory,
-            ILinksPolicyProvider policyProvider, IEnumerable<ILinksHandler> handlers, IRouteMap routeMap, ILinksEvaluator evaluator)
+        public DefaultLinksService(
+            IOptions<LinksOptions> options, 
+            ILogger<DefaultLinksService> logger, 
+            ILinksHandlerContextFactory contextFactory,
+            ILinksPolicyProvider policyProvider, 
+            IEnumerable<ILinksHandler> handlers, 
+            IRouteMap routeMap, 
+            ILinksEvaluator evaluator)
         {
             if (options == null)
                 throw new ArgumentNullException(nameof(options));
