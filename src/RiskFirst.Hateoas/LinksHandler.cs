@@ -7,7 +7,6 @@ namespace RiskFirst.Hateoas
 {
     public abstract class LinksHandler<TRequirement, TResource> : ILinksHandler
         where TRequirement : ILinksRequirement
-        where TResource : class
     {
 
         public async Task HandleAsync<T>(LinksHandlerContext<T> context)
@@ -20,7 +19,7 @@ namespace RiskFirst.Hateoas
         protected virtual async Task HandleAsync(LinksHandlerContext<TResource> context)
         {
             foreach (var req in context.Requirements.OfType<TRequirement>())
-            {
+            {                
                 await HandleRequirementAsync(context, req);
             }
         }

@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 namespace RiskFirst.Hateoas.Implementation
 {
     public class PagingLinksRequirement<TResource> : LinksHandler<PagingLinksRequirement<TResource>, TResource>, ILinksRequirement<TResource>
-        where TResource : class
     {
         public const string QueryStringFormat = "?pagenumber={0}&pagesize={1}";
 
@@ -23,7 +22,7 @@ namespace RiskFirst.Hateoas.Implementation
         protected override async Task HandleRequirementAsync(LinksHandlerContext<TResource> context, PagingLinksRequirement<TResource> requirement)
         {
             var condition = requirement.Condition;
-            if (condition != null && !condition.AssertAll(context.Resource))
+            if (!context.AssertAll(condition))
             {
                 context.Skipped(requirement, LinkRequirementSkipReason.Assertion);
                 return;
@@ -33,20 +32,12 @@ namespace RiskFirst.Hateoas.Implementation
             if (pagingResource == null)
                 throw new InvalidOperationException($"PagingLinkRequirement can only be used by a resource of type IPageLinkContainer. Type: {context.Resource.GetType().FullName}");
 
-            var route = context.RouteMap.GetCurrentRoute();
+            var route = context.CurrentRoute;
             var values = context.CurrentRouteValues;
 
             if (condition != null && condition.RequiresAuthorization)
             {
-                var authContext = new LinkAuthorizationContext<TResource>(
-                    condition.RequiresRouteAuthorization,
-                    condition.AuthorizationRequirements,
-                    route,
-                    values,
-                    context.Resource,
-                    context.User);
-
-                if (!await context.Authorization.AuthorizeLink(authContext))
+                if (!await context.AuthorizeAsync(route, values, condition))
                 {
                     context.Skipped(requirement, LinkRequirementSkipReason.Authorization);
                     return;

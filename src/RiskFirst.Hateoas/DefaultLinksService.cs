@@ -55,13 +55,15 @@ namespace RiskFirst.Hateoas
         {
             // look for policies defined on the controller, this is used to override policies defined on the type or registered
             var currentRoute = routeMap.GetCurrentRoute();
-            if (currentRoute.LinksAttributes.Any())
+            if (currentRoute.LinksAttributes != null && currentRoute.LinksAttributes.Any())
             {
                 foreach (var policyName in currentRoute.LinksAttributes.Select(a => a.Policy))
                 {
-                    var controllerPolicy = await policyProvider.GetPolicyAsync<TResource>(policyName);
+                    var controllerPolicy = string.IsNullOrEmpty(policyName)
+                            ? await policyProvider.GetPolicyAsync<TResource>()
+                            : await policyProvider.GetPolicyAsync<TResource>(policyName);
                     if (controllerPolicy == null)
-                        throw new InvalidOperationException($"Controller-registered Policy not defined: {policyName} Route: {currentRoute.RouteName}");
+                        throw new InvalidOperationException($"Controller-registered Policy not defined: {policyName ?? "<default>"} Route: {currentRoute.RouteName}");
                     await this.AddLinksAsync(linkContainer, controllerPolicy);
                 }
                 return;
@@ -71,17 +73,19 @@ namespace RiskFirst.Hateoas
             var typeAttributes = typeof(TResource).GetTypeInfo().GetCustomAttributes<LinksAttribute>(true);
             if (typeAttributes.Any())
             {
-                foreach (var attr in typeAttributes)
+                foreach (var policyName in typeAttributes.Select(a => a.Policy))
                 {
-                    var typePolicy = await policyProvider.GetPolicyAsync<TResource>(attr.Policy);
+                    var typePolicy = string.IsNullOrEmpty(policyName)
+                            ? await policyProvider.GetPolicyAsync<TResource>()
+                            : await policyProvider.GetPolicyAsync<TResource>(policyName);
                     if (typePolicy == null)
-                        throw new InvalidOperationException($"Type-registered policy not defined: {attr.Policy} Type: {typeof(TResource).FullName}");
+                        throw new InvalidOperationException($"Type-registered policy not defined: {policyName ?? "<default>"} Type: {typeof(TResource).FullName}");
                     await this.AddLinksAsync(linkContainer, typePolicy);
                 }
                 return;
             }
 
-            // look for a policy registered against the type
+            // look for a policy registered againt the type
             var defaultTypePolicy = await policyProvider.GetPolicyAsync<TResource>();
             if (defaultTypePolicy != null)
             {

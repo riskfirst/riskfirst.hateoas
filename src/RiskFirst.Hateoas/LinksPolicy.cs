@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace RiskFirst.Hateoas
 {
-    public class LinksPolicy<TResource> : ILinksPolicy<TResource> where TResource : class
+    public class LinksPolicy<TResource> : ILinksPolicy<TResource> 
     {
         public LinksPolicy(IEnumerable<ILinksRequirement<TResource>> requirements)
         {

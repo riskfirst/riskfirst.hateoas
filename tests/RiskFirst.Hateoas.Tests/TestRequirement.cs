@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace RiskFirst.Hateoas.Tests
 {
-    public class LinksServiceTestContext
+    public class TestRequirement<TResource> : ILinksRequirement<TResource>
     {
     }
 }

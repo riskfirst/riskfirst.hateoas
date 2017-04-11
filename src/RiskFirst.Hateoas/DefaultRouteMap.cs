@@ -43,7 +43,7 @@ namespace RiskFirst.Hateoas
             foreach (var attr in attributes.Where(a => !String.IsNullOrWhiteSpace(a.HttpAttribute.Name)))
             {
                 var method = ParseMethod(attr.HttpAttribute.HttpMethods);
-                RouteMap[attr.HttpAttribute.Name] = new RouteInfo(attr.HttpAttribute.Name, method, attr.Method);
+                RouteMap[attr.HttpAttribute.Name] = new RouteInfo(attr.HttpAttribute.Name, method, new ReflectionControllerMethodInfo(attr.Method));
             }
         }
                 
@@ -63,7 +63,7 @@ namespace RiskFirst.Hateoas
                 throw new InvalidOperationException($"Invalid action descriptor in route map");
             var attr = action.MethodInfo.GetCustomAttribute<HttpMethodAttribute>();
             var method = ParseMethod(attr.HttpMethods);
-            return new RouteInfo(attr.Name, method, action.MethodInfo);
+            return new RouteInfo(attr.Name, method, new ReflectionControllerMethodInfo(action.MethodInfo));
         }
 
         private HttpMethod ParseMethod(IEnumerable<string> methods)

@@ -4,9 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RiskFirst.Hateoas.Tests
+namespace RiskFirst.Hateoas.CustomRequirementSample.Models
 {
-    public class TestLinkContainer : LinkContainer
+    public class ApiInfo : LinkContainer
     {
+        public string Version { get; set; }
     }
 }

@@ -3,7 +3,9 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace RiskFirst.Hateoas
 {
@@ -12,6 +14,7 @@ namespace RiskFirst.Hateoas
     public class LinksHandlerContext<TResource>
     {
         private HashSet<ILinksRequirement> pendingRequirements;
+        private ILinkAuthorizationService authService;
 
         public LinksHandlerContext(
             IEnumerable<ILinksRequirement> requirements,
@@ -35,11 +38,12 @@ namespace RiskFirst.Hateoas
                 throw new ArgumentNullException(nameof(resource));
 
             this.Requirements = requirements;
-            this.RouteMap = routeMap;
-            this.Authorization = authService;
+            this.RouteMap = routeMap;           
             this.ActionContext = actionContext;
             this.Resource = resource;
             this.Logger = logger;
+
+            this.authService = authService;
             this.pendingRequirements = new HashSet<ILinksRequirement>(requirements);
         }
 
@@ -57,35 +61,51 @@ namespace RiskFirst.Hateoas
 
         public ClaimsPrincipal User => ActionContext?.HttpContext?.User;
 
+        public RouteInfo CurrentRoute => RouteMap.GetCurrentRoute();
         public RouteValueDictionary CurrentRouteValues => ActionContext?.RouteData?.Values;
 
         public virtual IList<ILinkSpec> Links { get; } = new List<ILinkSpec>();
+        
+        public virtual bool AssertAll(LinkCondition<TResource> condition)
+        {
+            if (condition == null)
+                throw new ArgumentNullException(nameof(condition));
+            return !condition.Assertions.Any() || condition.Assertions.All(a => a(this.Resource));
+        }
 
-        public virtual ILinkAuthorizationService Authorization { get; }
+        public virtual async Task<bool> AuthorizeAsync(RouteInfo route, RouteValueDictionary values, LinkCondition<TResource> condition)
+        {
+            if (route == null)
+                throw new ArgumentNullException(nameof(route));
+            if (values == null)
+                throw new ArgumentNullException(nameof(values));
+            if (condition == null)
+                throw new ArgumentNullException(nameof(condition));
 
-        public void Handled(ILinksRequirement requirement)
+            var authContext = new LinkAuthorizationContext<TResource>(
+                    condition.RequiresRouteAuthorization,
+                    condition.AuthorizationRequirements,
+                    condition.AuthorizationPolicyNames,
+                    route,
+                    values,
+                    this.Resource,
+                    this.User);
+
+            return await authService.AuthorizeLink(authContext);
+        }
+
+        public virtual void Handled(ILinksRequirement requirement)
         {
             pendingRequirements.Remove(requirement);
-        }
-        public void Skipped(ILinksRequirement requirement)
+        }       
+        public virtual void Skipped(ILinksRequirement requirement, LinkRequirementSkipReason reason = LinkRequirementSkipReason.Custom, string message = null)
         {
-            Skipped(requirement, LinkRequirementSkipReason.Custom,String.Empty);
-        }
-        public void Skipped(ILinksRequirement requirement, string message)
-        {
-            Skipped(requirement, LinkRequirementSkipReason.Custom, message);
-        }
-        public void Skipped(ILinksRequirement requirement, LinkRequirementSkipReason reason)
-        {
-            Skipped(requirement, reason, String.Empty);
-        }
-        public void Skipped(ILinksRequirement requirement, LinkRequirementSkipReason reason, string message)
-        {
-            Logger.LogInformation("Link {Requirement} skipped for user {User}. Reason: {LinkSkipReason}. {Message}.", requirement, User.Identity, reason,message);
+            var username = User?.Identity?.Name ?? "Unknown";
+            Logger.LogInformation("Link {Requirement} skipped for user {User}. Reason: {LinkSkipReason}. {Message}.", requirement, username, reason,message ?? String.Empty);
             pendingRequirements.Remove(requirement);
         }
 
-        public bool IsSuccess()
+        public virtual bool IsSuccess()
         {
             return pendingRequirements.Count == 0;
         }

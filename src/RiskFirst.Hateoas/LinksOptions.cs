@@ -10,12 +10,12 @@ namespace RiskFirst.Hateoas
 
         public ILinksPolicy<ILinkContainer> DefaultPolicy { get; set; } = new LinksPolicyBuilder<ILinkContainer>().RequireSelfLink().Build();
 
-        public void AddPolicy<TResource>(Action<LinksPolicyBuilder<TResource>> configurePolicy) where TResource : class
+        public void AddPolicy<TResource>(Action<LinksPolicyBuilder<TResource>> configurePolicy) //where TResource : class
         {
             AddPolicy(typeof(TResource).FullName, configurePolicy);
         }
 
-        public void AddPolicy<TResource>(string name, Action<LinksPolicyBuilder<TResource>> configurePolicy) where TResource : class
+        public void AddPolicy<TResource>(string name, Action<LinksPolicyBuilder<TResource>> configurePolicy) //where TResource : class
         {
             if (String.IsNullOrEmpty(name))
                 throw new ArgumentException("Policy name cannot be null", nameof(name));
