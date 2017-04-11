@@ -6,7 +6,7 @@ Build/nuget.exe
 Doc/doc.shfbproj_*
 TestResults/
 AppPackages/
-*.suo
+**/*.suo
 *.user
 *.userprefs
 _ReSharper.*
