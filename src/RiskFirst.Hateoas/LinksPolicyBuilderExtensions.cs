@@ -10,13 +10,11 @@ namespace RiskFirst.Hateoas
     public static class LinksPolicyBuilderExtensions
     {
         public static LinksPolicyBuilder<TResource> RequireSelfLink<TResource>(this LinksPolicyBuilder<TResource> builder)
-            where TResource : class
         {
             return builder.RequireSelfLink("self");
         }
         public static LinksPolicyBuilder<TResource> RequireSelfLink<TResource>(this LinksPolicyBuilder<TResource> builder,
             string id)
-            where TResource : class
         {
             return builder.Requires(new SelfLinkRequirement<TResource>()
             {
@@ -27,7 +25,6 @@ namespace RiskFirst.Hateoas
         public static LinksPolicyBuilder<TResource> RequireRoutedLink<TResource>(this LinksPolicyBuilder<TResource> builder,
             string id,
             string routeName)
-            where TResource : class
         {
             return builder.RequireRoutedLink(id, routeName, null, condition: null);
         }
@@ -37,7 +34,6 @@ namespace RiskFirst.Hateoas
             string routeName,
             Func<TResource, object> getValues,
             Action<LinkConditionBuilder<TResource>> configureCondition)
-            where TResource : class
         {
             var conditionBuilder = new LinkConditionBuilder<TResource>();
             configureCondition?.Invoke(conditionBuilder);
@@ -49,7 +45,6 @@ namespace RiskFirst.Hateoas
             string routeName,
             Func<TResource, object> getValues,
             LinkCondition<TResource> condition = null)
-            where TResource : class
         {
             Func<TResource, RouteValueDictionary> getRouteValues = r => new RouteValueDictionary();
             if (getValues != null)
@@ -64,7 +59,6 @@ namespace RiskFirst.Hateoas
             return builder.Requires(req);
         }
         public static LinksPolicyBuilder<TResource> RequiresPagingLinks<TResource>(this LinksPolicyBuilder<TResource> builder)
-            where TResource : class
         {
             return builder.RequiresPagingLinks("currentPage", "nextPage", "previousPage");
         }
@@ -72,22 +66,19 @@ namespace RiskFirst.Hateoas
             string currentId,
             string nextId,
             string previousId)
-            where TResource : class
         {
             return builder.RequiresPagingLinks(currentId, nextId, previousId, condition: null);
         }
         public static LinksPolicyBuilder<TResource> RequiresPagingLinks<TResource>(this LinksPolicyBuilder<TResource> builder,
             Action<LinkConditionBuilder<TResource>> configureCondition)
-            where TResource : class
         {
-            return builder.RequiresPagingLinks("currentPage", "nextPage", "previousPage");
+            return builder.RequiresPagingLinks("currentPage", "nextPage", "previousPage",configureCondition);
         }
         public static LinksPolicyBuilder<TResource> RequiresPagingLinks<TResource>(this LinksPolicyBuilder<TResource> builder,
             string currentId,
             string nextId,
             string previousId,
             Action<LinkConditionBuilder<TResource>> configureCondition)
-            where TResource : class
         {
             var conditionBuilder = new LinkConditionBuilder<TResource>();
             configureCondition?.Invoke(conditionBuilder);
@@ -99,7 +90,6 @@ namespace RiskFirst.Hateoas
             string nextId,
             string previousId,
             LinkCondition<TResource> condition)
-            where TResource : class
         {
             var req = new PagingLinksRequirement<TResource>()
             {

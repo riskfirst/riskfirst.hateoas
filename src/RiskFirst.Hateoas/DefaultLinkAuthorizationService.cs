@@ -14,17 +14,19 @@ namespace RiskFirst.Hateoas
         private readonly IAuthorizationService authService;
         public DefaultLinkAuthorizationService(IAuthorizationService authService)
         {
+            if (authService == null)
+                throw new ArgumentNullException(nameof(authService));
             this.authService = authService;
         }
 
         public async Task<bool> AuthorizeLink<TResource>(LinkAuthorizationContext<TResource> context)
         {
-            if (!context.User.Identity.IsAuthenticated)
+            if (!(context.User?.Identity?.IsAuthenticated ?? false))
                 return false;
 
             if (context.ShouldAuthorizeRoute)
             {
-                var authAttrs = GetRouteAuthorizationInfo(context.RouteInfo);
+                var authAttrs = context.RouteInfo.AuthorizeAttributes;
                 foreach (var authAttr in authAttrs)
                 {
                     if (!await AuthorizeData(authAttr, context.User, context.RouteValues))
@@ -36,6 +38,16 @@ namespace RiskFirst.Hateoas
             if (context.AuthorizationRequirements.Any())
             {
                 if (!await authService.AuthorizeAsync(context.User, context.Resource, context.AuthorizationRequirements))
+                {
+                    return false;
+                }
+            }
+            if(context.AuthorizationPolicyNames.Any())
+            {
+                var tasks = context.AuthorizationPolicyNames.Select(policyName => authService.AuthorizeAsync(context.User, context.Resource, policyName)).ToList();
+                await Task.WhenAll(tasks);
+               
+                if(!tasks.All(x => x.Result))
                 {
                     return false;
                 }
@@ -60,15 +72,6 @@ namespace RiskFirst.Hateoas
                 return false;
             }
             return true;
-        }
-               
-        protected virtual IEnumerable<IAuthorizeData> GetRouteAuthorizationInfo(RouteInfo routeInfo)
-        {
-            return routeInfo.MethodInfo.GetCustomAttributes<AuthorizeAttribute>()
-                              .Union(routeInfo.ControllerType.GetTypeInfo().GetCustomAttributes<AuthorizeAttribute>());
-        }
-
-
-
+        }   
     }
 }

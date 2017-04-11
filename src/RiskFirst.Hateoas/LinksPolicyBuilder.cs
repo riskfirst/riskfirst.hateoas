@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace RiskFirst.Hateoas
 {
-    public class LinksPolicyBuilder<TResource> where TResource : class
+    public class LinksPolicyBuilder<TResource>
     {
         public LinksPolicyBuilder()
         {

@@ -7,6 +7,6 @@ namespace RiskFirst.Hateoas
 {
     public interface ILinkTransformation
     {
-        string Transform(LinkTransformationContext context);
+         string Transform(LinkTransformationContext context);
     }
 }

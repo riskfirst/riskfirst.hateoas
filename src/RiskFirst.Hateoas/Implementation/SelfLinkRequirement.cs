@@ -3,7 +3,6 @@
 namespace RiskFirst.Hateoas.Implementation
 {
     public class SelfLinkRequirement<TResource> : LinksHandler<SelfLinkRequirement<TResource>, TResource>, ILinksRequirement<TResource>
-        where TResource : class
     {
 
         public SelfLinkRequirement()
@@ -15,7 +14,7 @@ namespace RiskFirst.Hateoas.Implementation
        
         protected override Task HandleRequirementAsync(LinksHandlerContext<TResource> context, SelfLinkRequirement<TResource> requirement)
         {
-            var route = context.RouteMap.GetCurrentRoute();
+            var route = context.CurrentRoute;
             var values = context.CurrentRouteValues;
 
             context.Links.Add(new LinkSpec(requirement.Id, route, values));

@@ -7,12 +7,13 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using RiskFirst.Hateoas.BasicSample.Models;
+using RiskFirst.Hateoas.CustomRequirementSample.Models;
 using RiskFirst.Hateoas.Models;
-using RiskFirst.Hateoas.BasicSample.Repository;
+using RiskFirst.Hateoas.CustomRequirementSample.Repository;
 using System.Reflection;
+using RiskFirst.Hateoas.CustomRequirementSample.Requirement;
 
-namespace RiskFirst.Hateoas.BasicSample
+namespace RiskFirst.Hateoas.CustomRequirementSample
 {
     public class Startup
     {       
@@ -33,9 +34,6 @@ namespace RiskFirst.Hateoas.BasicSample
         {
             services.AddLinks(config =>
             {
-                // Uncomment the next line to use relative hrefs instead of absolute
-                //config.UseRelativeHrefs();
-               
                 config.AddPolicy<ValueInfo>(policy =>
                 {
                     policy.RequireRoutedLink("self", "GetValueByIdRoute", x => new { id = x.Id });
@@ -51,12 +49,21 @@ namespace RiskFirst.Hateoas.BasicSample
                 config.AddPolicy<ItemsLinkContainer<ValueInfo>>(policy =>
                 {
                     policy.RequireSelfLink()
+                            .RequiresApiRootLink()
                             .RequireRoutedLink("insert", "InsertValueRoute");
                 });
+
+                config.AddPolicy<ApiInfo>(policy =>
+                {
+                    policy.RequireSelfLink()
+                            .RequireRoutedLink("values", "GetAllValuesRoute");
+                });
             });
+
             // Add framework services.
             services.AddMvc();
 
+            services.AddTransient<ILinksHandler, RootLinkHandler>();
             services.AddSingleton<IValuesRepository, ValuesRepository>();
         }
 

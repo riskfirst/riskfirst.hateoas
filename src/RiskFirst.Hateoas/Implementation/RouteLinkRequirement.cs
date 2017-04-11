@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 namespace RiskFirst.Hateoas.Implementation
 {
     public class RouteLinkRequirement<TResource> : LinksHandler<RouteLinkRequirement<TResource>, TResource>, ILinksRequirement<TResource>
-       where TResource : class
     {
         public RouteLinkRequirement()
         {
@@ -20,7 +19,7 @@ namespace RiskFirst.Hateoas.Implementation
         protected override async Task HandleRequirementAsync(LinksHandlerContext<TResource> context, RouteLinkRequirement<TResource> requirement)
         {
             var condition = requirement.Condition;
-            if (condition != null && !condition.AssertAll(context.Resource))
+            if (!context.AssertAll(condition))
             {
                 context.Skipped(requirement, LinkRequirementSkipReason.Assertion);
                 return;
@@ -43,16 +42,8 @@ namespace RiskFirst.Hateoas.Implementation
                 values = requirement.GetRouteValues(context.Resource);
             }
             if (condition != null && condition.RequiresAuthorization)
-            {
-                var authContext = new LinkAuthorizationContext<TResource>(
-                    condition.RequiresRouteAuthorization,
-                    condition.AuthorizationRequirements,
-                    route,
-                    values,
-                    context.Resource,
-                    context.User);
-
-                if (!await context.Authorization.AuthorizeLink(authContext))
+            {    
+                if (!await context.AuthorizeAsync(route,values,condition))
                 {
                     context.Skipped(requirement, LinkRequirementSkipReason.Authorization);
                     return;

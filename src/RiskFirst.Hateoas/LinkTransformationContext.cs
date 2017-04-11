@@ -15,7 +15,7 @@ namespace RiskFirst.Hateoas
             this.LinkSpec = spec;
             this.ActionContext = actionContext;
         }
-        public ILinkSpec LinkSpec { get; }
+        public virtual ILinkSpec LinkSpec { get; }
         public ActionContext ActionContext { get; }
         public HttpContext HttpContext => ActionContext.HttpContext;
         public RouteValueDictionary RouteValues => ActionContext.RouteData.Values;
