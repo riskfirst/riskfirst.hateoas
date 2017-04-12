@@ -6,11 +6,11 @@
     <title>$title$</title>
     <authors>Jamie Cohen</authors>
     <owners>RiskFirst</owners>
-    <licenseUrl>http://LICENSE_URL_HERE_OR_DELETE_THIS_LINE</licenseUrl>
-    <projectUrl>http://PROJECT_URL_HERE_OR_DELETE_THIS_LINE</projectUrl>
+    <licenseUrl>https://github.com/riskfirst/riskfirst.hateoas/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/riskfirst/riskfirst.hateoas</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Some description</description>
-    <releaseNotes>INitial release.</releaseNotes>
+    <releaseNotes>v1.0.0 - Initial release.</releaseNotes>
     <copyright>Copyright 2017</copyright>
     <tags>HATEOAS webapi links</tags>
   </metadata>
