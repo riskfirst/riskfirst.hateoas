@@ -52,9 +52,6 @@ namespace RiskFirst.Hateoas.Tests.Infrastructure
         public Mock<IAuthorizationService> AuthorizationServiceMock { get; }
 
         private IRouteMap routeMap;
-        private bool requiresRouteAuthorization;
-        private IEnumerable<IAuthorizationRequirement> requirements;
-        private IEnumerable<string> policies;
 
         public LinksAuthorizationTestCase(ILinkAuthorizationService underTest, ClaimsPrincipal user, IRouteMap routeMap, Mock<IAuthorizationService> authServiceMock)
         {
