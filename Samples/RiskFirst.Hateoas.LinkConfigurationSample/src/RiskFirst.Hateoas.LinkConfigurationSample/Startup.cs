@@ -37,7 +37,7 @@ namespace RiskFirst.Hateoas.LinkConfigurationSample
                 // Uncomment out one of the two lines below to see how to configure the rel value of links to contain a uri to the returned model
                 // 
                 //config.ConfigureRelTransformation(transform => transform.AddProtocol().AddHost().AddModelPath());
-                //config.UseRelTransformation<ModelRelTransformation>();
+                config.UseRelTransformation<ModelRelTransformation>();
 
                 config.AddPolicy<ValueInfo>(policy =>
                 {

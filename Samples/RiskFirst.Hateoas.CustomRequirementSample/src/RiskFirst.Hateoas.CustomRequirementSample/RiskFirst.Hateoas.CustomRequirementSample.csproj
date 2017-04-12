@@ -3,9 +3,9 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp1.0</TargetFramework>
     <PreserveCompilationContext>true</PreserveCompilationContext>
-    <AssemblyName>RiskFirst.Hateoas.BasicSample</AssemblyName>
+    <AssemblyName>RiskFirst.Hateoas.CustomRequirementSample</AssemblyName>
     <OutputType>Exe</OutputType>
-    <PackageId>RiskFirst.Hateoas.BasicSample</PackageId>
+    <PackageId>RiskFirst.Hateoas.CustomRequirementSample</PackageId>
     <UserSecretsId>aspnet-RiskFirst.Hateoas.BasicSample-20170327102603</UserSecretsId>
     <RuntimeFrameworkVersion>1.0.4</RuntimeFrameworkVersion>
     <PackageTargetFallback>$(PackageTargetFallback);dotnet5.6;portable-net45+win8</PackageTargetFallback>
@@ -29,7 +29,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.0.2" />
     <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.0.2" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="1.0.2" />
-    <PackageReference Include="riskfirst.hateoas" Version="1.0.0" />
+    <PackageReference Include="RiskFirst.Hateoas" Version="1.0.0" />
   </ItemGroup>
 
 </Project>
