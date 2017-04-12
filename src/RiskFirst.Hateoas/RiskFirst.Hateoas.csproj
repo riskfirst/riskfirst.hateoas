@@ -19,7 +19,7 @@
     <PackageTags>HATEOAS aspnet dotnetcore</PackageTags>
     <PackageReleaseNotes>v0.0.1 - Initial release
 v1.0.0 - first stable release</PackageReleaseNotes>
-    <Version>1.0.0</Version>
+    <Version>0.0.1-rc1</Version>
   </PropertyGroup>
 
   <ItemGroup>
