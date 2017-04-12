@@ -9,6 +9,15 @@
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageProjectUrl>https://github.com/riskfirst/riskfirst.hateoas</PackageProjectUrl>
+    <Authors>JamieC</Authors>
+    <PackageLicenseUrl>https://github.com/riskfirst/riskfirst.hateoas/blob/master/LICENSE</PackageLicenseUrl>
+    <Description>An implementation of HATEOAS for aspnet core web api projects which gives full control of which links to apply to models returned from your api. In order to communicate varying state to the end-user, this library fully integrates with Authorization, and allows arbitrary conditions to determine whether to show or hide HATEOAS links between api resources.</Description>
+    <RepositoryUrl>https://github.com/riskfirst/riskfirst.hateoas</RepositoryUrl>
+    <RepositoryType>GIT</RepositoryType>
+    <PackageTags>HATEOAS aspnet dotnetcore</PackageTags>
+    <PackageReleaseNotes>v0.0.1 - Initial release</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
