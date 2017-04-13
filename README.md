@@ -7,7 +7,7 @@ An implementation of [HATEOAS](https://en.wikipedia.org/wiki/HATEOAS) for aspnet
 Install the package
 
 ```powershell
-PM> Install-Package {{TBC}}
+PM> Install-Package RiskFirst.Hateoas
 ```
 
 Configure the links to include for each of your models.
@@ -160,7 +160,7 @@ services.AddLinks(config =>
 });
 ```
 
-Both Href and Rel transformations can be fully controlled by supplying a class or Type which implements [```ILinkTransformation```](src/RiskFirst.Hateoas/ILinkTransformation).
+Both Href and Rel transformations can be fully controlled by supplying a class or Type which implements [```ILinkTransformation```](src/RiskFirst.Hateoas/ILinkTransformation.cs).
 
 ```csharp
 services.AddLinks(config => 
@@ -187,7 +187,7 @@ Both ways of customizaing transformations can be seen in the [LinkConfigurationS
 
 ### Authorization and Conditional links
 
-It is likely that you wish to control which links are included with each model, and one common requirement is to only show links for which the current user is authorized. This library fully integrates into the authorization pipeline and will apply any authorization policy you have applied to the current controller or action.
+It is likely that you wish to control which links are included with each model, and one common requirement is to only show links for which the current user is authorized. This library fully integrates into the authorization pipeline and will apply any authorization policy you have applied to the linked action.
 
 To enable authorization on a link provide the ```AuthorizeRoute``` condition.
 
@@ -201,9 +201,12 @@ public class Startup
       config.AddPolicy<MyModel>("FullInfo",policy => {
           policy.RequiresSelfLink()
                 .RequiresRoutedLink("all", "GetAllModelsRoute")
-                .RequiresRoutedLink("parentModels", "GetParentModelRoute", x => new { parentId = x.ParentId }, condition => condition.AuthorizeRoute());
-                .RequiresRoutedLink("subModels", "GetSubModelsRoute", x => new { id = x.Id }, condition => condition.AuthorizeRoute());
-                .RequiresRoutedLink("delete", "DeleteModelRoute", x => new { id = x.Id }, condition => condition.AuthorizeRoute());
+                .RequiresRoutedLink("parentModels", "GetParentModelRoute", 
+                                      x => new { parentId = x.ParentId }, condition => condition.AuthorizeRoute());
+                .RequiresRoutedLink("subModels", "GetSubModelsRoute", 
+                                      x => new { id = x.Id }, condition => condition.AuthorizeRoute());
+                .RequiresRoutedLink("delete", "DeleteModelRoute", 
+                                      x => new { id = x.Id }, condition => condition.AuthorizeRoute());
       });
     });
   }
@@ -231,7 +234,7 @@ You are free to add your own requirements using the generic `Requires` method on
 ```csharp
 using RiskFirst.Hateoas;
 
-public class RootLinkRequirement : ILinksRequirement
+public class RootLinkRequirement<TResource> : ILinksRequirement<TResource>
 {
     public string Id { get; set; } = "root";
 }
@@ -241,7 +244,7 @@ Given this requirement, we need a class to handle it, which must implement `ILin
 ```csharp
 using RiskFirst.Hateoas;
 
-public class RootLinkHandler : ILinkHandler
+public class RootLinkHandler : ILinksHandler
 {
     public async Task HandleAsync<T>(LinksHandlerContext<T> context)
     [
@@ -275,7 +278,7 @@ public class Startup
 }
 ```
 
-There are many additional parts of the framework which can be extended by writing your own implementation of the appropriate interface and registering it with `IServicesCollection` for dependency injection. For example, you could change the way that links are evaluated and applied to your link container by implementing your own [`ILinksEvaluator`](src/RiskFirst.Hateoas/ILinksEvaluator)
+There are many additional parts of the framework which can be extended by writing your own implementation of the appropriate interface and registering it with `IServicesCollection` for dependency injection. For example, you could change the way that links are evaluated and applied to your link container by implementing your own [`ILinksEvaluator`](src/RiskFirst.Hateoas/ILinksEvaluator.cs)
 
 ```csharp
 using RiskFirst.Hateoas;
@@ -294,13 +297,14 @@ public class Startup
 
 The list of interfaces which have a default implementation, but which can be replaced is:
 
-- [`ILinkAuthorizationService`](src/RiskFirst.Hateoas/ILinkAuthorizationService), 
+- [`ILinkAuthorizationService`](src/RiskFirst.Hateoas/ILinkAuthorizationService.cs), 
 controls how links are authorized during link condition evaluation.
-- [`ILinksEvaluator`](src/RiskFirst.Hateoas/ILinksEvaluator), controls how links are evaluated and transformed before being written to the returned model.
-- [`ILinksHandlerContextFactory`](src/RiskFirst.Hateoas/ILinksHandlerContextFactory), controls how the context is created which is passed through the requirement handlers during processing.
-- [`ILinksPolicyProvider`](src/RiskFirst.Hateoas/ILinksPolicyProvider), provides lookup for `ILinkPolicy` instances by resource type and name.
-- [`ILinksService`](src/RiskFirst.Hateoas/ILinksService), the main entrypoint into the framework, this interface is injected into user code to apply links to api resources. 
-
+- [`ILinksEvaluator`](src/RiskFirst.Hateoas/ILinksEvaluator.cs), controls how links are evaluated and transformed before being written to the returned model.
+- [`ILinksHandlerContextFactory`](src/RiskFirst.Hateoas/ILinksHandlerContextFactory.cs), controls how the context is created which is passed through the requirement handlers during processing.
+- [`ILinksPolicyProvider`](src/RiskFirst.Hateoas/ILinksPolicyProvider.cs), provides lookup for `ILinkPolicy` instances by resource type and name.
+- [`ILinksService`](src/RiskFirst.Hateoas/ILinksService.cs), the main entrypoint into the framework, this interface is injected into user code to apply links to api resources. 
+- [`ILinkTransformationContextFactory`](src/RiskFirst.Hateoas/ILinkTransformationContextFactory.cs), controls how the transformation context is created during transformation for rel & href properies of links.
+- [`IRouteMap`](src/RiskFirst.Hateoas/IRouteMap.cs), controls how your API is indexed to allow links between routes.
 
 ### Troubleshooting
 
