@@ -29,18 +29,14 @@ namespace RiskFirst.Hateoas
 
             var controllerMethods = controllers.SelectMany(c => c.GetMethods(BindingFlags.Public | BindingFlags.Instance)
                                                                  .Where(m => m.IsDefined(typeof(HttpMethodAttribute)))
-                                                                 .Select(m => new {
+                                                                 .SelectMany(m => m.GetCustomAttributes<HttpMethodAttribute>(), (m, attr) => new
+                                                                 {
                                                                      Controller = c,
-                                                                     Method = m
+                                                                     Method = m,
+                                                                     HttpAttribute = attr
                                                                  }));
-
-            var attributes = controllerMethods.Select(m => new {
-                Controller = m.Controller,
-                Method = m.Method,
-                HttpAttribute = m.Method.GetCustomAttribute<HttpMethodAttribute>()
-            });
-
-            foreach (var attr in attributes.Where(a => !String.IsNullOrWhiteSpace(a.HttpAttribute.Name)))
+           
+            foreach (var attr in controllerMethods.Where(a => !String.IsNullOrWhiteSpace(a.HttpAttribute.Name)))
             {
                 var method = ParseMethod(attr.HttpAttribute.HttpMethods);
                 RouteMap[attr.HttpAttribute.Name] = new RouteInfo(attr.HttpAttribute.Name, method, new ReflectionControllerMethodInfo(attr.Method));

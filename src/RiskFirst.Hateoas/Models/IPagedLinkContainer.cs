@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace RiskFirst.Hateoas.Models
 {
-    interface IPagedLinkContainer : ILinkContainer
+    public interface IPagedLinkContainer : ILinkContainer
     {
         int PageSize { get; set; }
         int PageNumber { get; set; }

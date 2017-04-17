@@ -75,5 +75,59 @@ namespace RiskFirst.Hateoas.Tests
 
             testCase.RelTransformMock.Verify(x => x.Transform(It.IsAny<LinkTransformationContext>()), Times.Once());
         }
+
+        [AutonamedFact]
+        public void GivenExceptionThrowingHrefTransformation_ThowsLinkTransformationException()
+        {
+            // Arrange
+            var testCase = ConfigureTestCase(builder =>
+            {
+                builder.UseMockHrefTransformation(mock =>
+                {
+                    mock.Setup(x => x.Transform(It.IsAny<LinkTransformationContext>())).Throws<InvalidOperationException>();
+                })
+                .UseMockRelTransformation(mock =>
+                {
+                    mock.Setup(x => x.Transform(It.IsAny<LinkTransformationContext>())).Returns("rel");
+                });
+            });
+            var mockLinkSpec = new Mock<ILinkSpec>();
+            mockLinkSpec.SetupGet(x => x.Id).Returns("testLink");
+            mockLinkSpec.SetupGet(x => x.HttpMethod).Returns(HttpMethod.Get);
+
+            // Act
+            var model = new TestLinkContainer();
+            Assert.Throws<LinkTransformationException>(() =>
+            {
+                testCase.UnderTest.BuildLinks(new[] { mockLinkSpec.Object }, model);
+            });
+        }
+
+        [AutonamedFact]
+        public void GivenExceptionThrowingRelTransformation_ThowsLinkTransformationException()
+        {
+            // Arrange
+            var testCase = ConfigureTestCase(builder =>
+            {
+                builder.UseMockHrefTransformation(mock =>
+                {
+                    mock.Setup(x => x.Transform(It.IsAny<LinkTransformationContext>())).Returns("href");
+                })
+                .UseLinkBuilderRelTransformation(config =>
+                {
+                    config.Add(ctx => throw new InvalidOperationException());
+                });
+            });
+            var mockLinkSpec = new Mock<ILinkSpec>();
+            mockLinkSpec.SetupGet(x => x.Id).Returns("testLink");
+            mockLinkSpec.SetupGet(x => x.HttpMethod).Returns(HttpMethod.Get);
+
+            // Act
+            var model = new TestLinkContainer();
+            Assert.Throws<LinkTransformationException>(() =>
+            {
+                testCase.UnderTest.BuildLinks(new[] { mockLinkSpec.Object }, model);
+            });
+        }
     }
 }

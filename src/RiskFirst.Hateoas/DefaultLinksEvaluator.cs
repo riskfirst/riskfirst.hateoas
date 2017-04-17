@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using RiskFirst.Hateoas.Models;
+using System;
 using System.Collections.Generic;
 
 namespace RiskFirst.Hateoas
@@ -18,12 +19,19 @@ namespace RiskFirst.Hateoas
             foreach (var link in links)
             {
                 var context = contextFactory.CreateContext(link);
-                container.AddLink(link.Id, new Link()
+                try
                 {
-                    Href = options.HrefTransformation?.Transform(context),
-                    Rel = options.RelTransformation?.Transform(context),
-                    Method = link.HttpMethod.ToString()
-                });
+                    container.AddLink(link.Id, new Link()
+                    {
+                        Href = options.HrefTransformation?.Transform(context),
+                        Rel = options.RelTransformation?.Transform(context),
+                        Method = link.HttpMethod.ToString()
+                    });
+                }
+                catch(Exception ex)
+                {
+                    throw new LinkTransformationException($"Unable to transform link {link.Id}", ex, context);
+                }
             }
         }
 

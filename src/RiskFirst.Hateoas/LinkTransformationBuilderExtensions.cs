@@ -28,7 +28,8 @@ namespace RiskFirst.Hateoas
                 var valuesDictionary = GetValuesDictionary(ctx.LinkSpec.RouteValues);
                 var virtualPathContext = new VirtualPathContext(ctx.HttpContext, ctx.RouteValues, valuesDictionary, ctx.LinkSpec.RouteName);
                 var virtualPathData = ctx.Router.GetVirtualPath(virtualPathContext);
-
+                if (virtualPathData == null)
+                    throw new InvalidOperationException($"Invalid virtualPathData when adding route '{ctx.LinkSpec.RouteName}'. RouteValues: {String.Join(",", valuesDictionary.Select(x => String.Concat(x.Key,"=",x.Value)))}");
                 return virtualPathData.VirtualPath;
             });
         }
