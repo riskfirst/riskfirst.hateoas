@@ -1,3 +1,5 @@
+![CI Build](https://riskfirst.visualstudio.com/_apis/public/build/definitions/2e2e46bb-1ab7-484e-8117-335c3855d65d/326/badge)
+
 # RiskFirst.Hateoas
 
 An implementation of [HATEOAS](https://en.wikipedia.org/wiki/HATEOAS) for aspnet core web api projects which gives full control of which links to apply to models returned from your api. In order to communicate varying state to the end-user, this library fully integrates with Authorization, and allows arbitrary conditions to determine whether to show or hide HATEOAS links between api resources.
