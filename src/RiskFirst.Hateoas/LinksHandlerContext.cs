@@ -11,7 +11,7 @@ namespace RiskFirst.Hateoas
 {
     public enum LinkRequirementSkipReason { Assertion, Authorization, Error, Custom }
 
-    public class LinksHandlerContext<TResource>
+    public class LinksHandlerContext
     {
         private HashSet<ILinksRequirement> pendingRequirements;
         private ILinkAuthorizationService authService;
@@ -20,9 +20,9 @@ namespace RiskFirst.Hateoas
             IEnumerable<ILinksRequirement> requirements,
             IRouteMap routeMap,
             ILinkAuthorizationService authService,
-            ILogger<LinksHandlerContext<TResource>> logger,
+            ILogger<LinksHandlerContext> logger,
             ActionContext actionContext,
-            TResource resource)
+            object resource)
         {
             if (requirements == null)
                 throw new ArgumentNullException(nameof(requirements));
@@ -49,9 +49,9 @@ namespace RiskFirst.Hateoas
 
         public ActionContext ActionContext { get; }
 
-        public ILogger<LinksHandlerContext<TResource>> Logger { get; set; }
+        public ILogger<LinksHandlerContext> Logger { get; set; }
 
-        public virtual TResource Resource { get; }
+        public virtual object Resource { get; }
 
         public virtual IEnumerable<ILinksRequirement> Requirements { get; }
 
@@ -66,14 +66,14 @@ namespace RiskFirst.Hateoas
 
         public virtual IList<ILinkSpec> Links { get; } = new List<ILinkSpec>();
         
-        public virtual bool AssertAll(LinkCondition<TResource> condition)
+        public virtual bool AssertAll<TResource>(LinkCondition<TResource> condition)
         {
             if (condition == null)
                 throw new ArgumentNullException(nameof(condition));
-            return !condition.Assertions.Any() || condition.Assertions.All(a => a(this.Resource));
+            return !condition.Assertions.Any() || condition.Assertions.All(a => a((TResource)this.Resource));
         }
 
-        public virtual async Task<bool> AuthorizeAsync(RouteInfo route, RouteValueDictionary values, LinkCondition<TResource> condition)
+        public virtual async Task<bool> AuthorizeAsync<TResource>(RouteInfo route, RouteValueDictionary values, LinkCondition<TResource> condition)
         {
             if (route == null)
                 throw new ArgumentNullException(nameof(route));
@@ -88,7 +88,7 @@ namespace RiskFirst.Hateoas
                     condition.AuthorizationPolicyNames,
                     route,
                     values,
-                    this.Resource,
+                    (TResource)this.Resource,
                     this.User);
 
             return await authService.AuthorizeLink(authContext);

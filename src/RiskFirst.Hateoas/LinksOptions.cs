@@ -8,11 +8,11 @@ namespace RiskFirst.Hateoas
     {
         private IDictionary<string, ILinksPolicy> PolicyMap { get; } = new Dictionary<string, ILinksPolicy>();
 
-        public ILinksPolicy<ILinkContainer> DefaultPolicy { get; set; } = new LinksPolicyBuilder<ILinkContainer>().RequireSelfLink().Build();
+        public ILinksPolicy DefaultPolicy { get; set; } = new LinksPolicyBuilder<ILinkContainer>().RequireSelfLink().Build();
 
         public void AddPolicy<TResource>(Action<LinksPolicyBuilder<TResource>> configurePolicy) //where TResource : class
         {
-            AddPolicy(typeof(TResource).FullName, configurePolicy);
+            AddPolicy("Default", configurePolicy);
         }
 
         public void AddPolicy<TResource>(string name, Action<LinksPolicyBuilder<TResource>> configurePolicy) //where TResource : class
@@ -24,17 +24,19 @@ namespace RiskFirst.Hateoas
 
             var builder = new LinksPolicyBuilder<TResource>();
             configurePolicy(builder);
-            PolicyMap[name] = builder.Build();
+            var policyName = $"{name}:{typeof(TResource).FullName}";
+            PolicyMap[policyName] = builder.Build();
         }
-        public ILinksPolicy<TResource> GetPolicy<TResource>()
+        public ILinksPolicy GetPolicy<TResource>()
         {
-            return GetPolicy<TResource>(typeof(TResource).FullName);
+            return GetPolicy<TResource>("Default");
         }
-        public ILinksPolicy<TResource> GetPolicy<TResource>(string name)
+        public ILinksPolicy GetPolicy<TResource>(string name)
         {
             if (String.IsNullOrEmpty(name))
                 throw new ArgumentException("Policy name cannot be null", nameof(name));
-            return PolicyMap.ContainsKey(name) ? PolicyMap[name] as ILinksPolicy<TResource> : null;
+            var policyName = $"{name}:{typeof(TResource).FullName}";
+            return PolicyMap.ContainsKey(policyName) ? PolicyMap[policyName] as ILinksPolicy/*<TResource>*/ : null;
         }
 
         private ILinkTransformation hrefTransformation = new LinkTransformationBuilder().AddProtocol().AddHost().AddRoutePath().Build();

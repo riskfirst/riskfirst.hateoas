@@ -6,7 +6,7 @@ namespace RiskFirst.Hateoas
 {
     public static class ILinksServiceExtensions
     {
-        public static Task AddLinksAsync<T>(this ILinksService service, T linkContainer, ILinksPolicy<T> policy) where T : ILinkContainer
+        public static Task AddLinksAsync<T>(this ILinksService service, T linkContainer, ILinksPolicy/*<T>*/ policy) where T : ILinkContainer
         {
             if (service == null)
                 throw new ArgumentNullException(nameof(service));

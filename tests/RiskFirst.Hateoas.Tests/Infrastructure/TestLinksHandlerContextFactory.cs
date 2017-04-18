@@ -23,17 +23,17 @@ namespace RiskFirst.Hateoas.Tests.Infrastructure
 
         public Mock LinksHandlerContextMock { get; private set; }
         public Mock LoggerMock { get; private set; }
-        public LinksHandlerContext<TResource> CreateContext<TResource>(IEnumerable<ILinksRequirement> requirements, TResource resource)
+        public LinksHandlerContext CreateContext(IEnumerable<ILinksRequirement> requirements, object resource)
         {
-            LoggerMock = new Mock<ILogger<LinksHandlerContext<TResource>>>();
-            LinksHandlerContextMock = new Mock<LinksHandlerContext<TResource>>(requirements, routeMap, authService, LoggerMock.Object, actionContext, resource);
+            LoggerMock = new Mock<ILogger<LinksHandlerContext>>();
+            LinksHandlerContextMock = new Mock<LinksHandlerContext>(requirements, routeMap, authService, LoggerMock.Object, actionContext, resource);
             LinksHandlerContextMock.CallBase = true;
-            return (LinksHandlerContext<TResource>)LinksHandlerContextMock.Object;
+            return (LinksHandlerContext)LinksHandlerContextMock.Object;
         }
 
-        public Mock<LinksHandlerContext<TResource>> GetLinksHandlerContextMock<TResource>()
+        public Mock<LinksHandlerContext> GetLinksHandlerContextMock<TResource>()
         {
-            return (Mock<LinksHandlerContext<TResource>>)this.LinksHandlerContextMock;
+            return (Mock<LinksHandlerContext>)this.LinksHandlerContextMock;
         }
     }
 }

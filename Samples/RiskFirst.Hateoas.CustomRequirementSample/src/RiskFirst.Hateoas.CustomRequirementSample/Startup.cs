@@ -49,7 +49,7 @@ namespace RiskFirst.Hateoas.CustomRequirementSample
                 config.AddPolicy<ItemsLinkContainer<ValueInfo>>(policy =>
                 {
                     policy.RequireSelfLink()
-                            .RequiresApiRootLink()
+                            .RequiresApiRootLink() // Link to the API root from a collection of values
                             .RequireRoutedLink("insert", "InsertValueRoute");
                 });
 
@@ -63,7 +63,7 @@ namespace RiskFirst.Hateoas.CustomRequirementSample
             // Add framework services.
             services.AddMvc();
 
-            services.AddTransient<ILinksHandler, RootLinkHandler>();
+            services.AddTransient<ILinksHandler, ApiRootLinkHandler>();
             services.AddSingleton<IValuesRepository, ValuesRepository>();
         }
 

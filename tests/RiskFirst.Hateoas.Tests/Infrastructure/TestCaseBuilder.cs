@@ -127,6 +127,16 @@ namespace RiskFirst.Hateoas.Tests.Infrastructure
             return this;
         }
 
+        public ILinksPolicy GetPolicy<TResource>()
+        {
+            return options.GetPolicy<TResource>();
+        }
+
+        public ILinksPolicy GetPolicy<TResource>(string name)
+        {
+            return options.GetPolicy<TResource>(name);
+        }
+
         public TestCaseBuilder DefaultPolicy(Action<LinksPolicyBuilder<ILinkContainer>> configurePolicy)
         {
             var builder = new LinksPolicyBuilder<ILinkContainer>();

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RiskFirst.Hateoas.Implementation
 {
-    public class PagingLinksRequirement<TResource> : LinksHandler<PagingLinksRequirement<TResource>, TResource>, ILinksRequirement<TResource>
+    public class PagingLinksRequirement<TResource> : LinksHandler<PagingLinksRequirement<TResource>>, ILinksRequirement
     {
         public const string QueryStringFormat = "?pagenumber={0}&pagesize={1}";
 
@@ -19,7 +19,7 @@ namespace RiskFirst.Hateoas.Implementation
         public string PreviousId { get; set; }
         public LinkCondition<TResource> Condition { get; set; } = LinkCondition<TResource>.None;
         
-        protected override async Task HandleRequirementAsync(LinksHandlerContext<TResource> context, PagingLinksRequirement<TResource> requirement)
+        protected override async Task HandleRequirementAsync(LinksHandlerContext context, PagingLinksRequirement<TResource> requirement)
         {
             var condition = requirement.Condition;
             if (!context.AssertAll(condition))

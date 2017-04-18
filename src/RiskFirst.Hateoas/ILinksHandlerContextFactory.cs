@@ -4,6 +4,6 @@ namespace RiskFirst.Hateoas
 {
     public interface ILinksHandlerContextFactory
     {
-        LinksHandlerContext<TResource> CreateContext<TResource>(IEnumerable<ILinksRequirement> requirements, TResource resource);
+        LinksHandlerContext CreateContext(IEnumerable<ILinksRequirement> requirements, object resource);
     }
 }

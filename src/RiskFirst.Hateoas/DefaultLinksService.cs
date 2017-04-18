@@ -123,7 +123,18 @@ namespace RiskFirst.Hateoas
             var ctx = contextFactory.CreateContext(requirements, linkContainer);
             foreach (var handler in handlers)
             {
-                await handler.HandleAsync(ctx);
+                try
+                {
+                    await handler.HandleAsync(ctx);
+                }
+                catch(InvalidCastException)
+                {
+                    throw;
+                }
+                catch(Exception ex)
+                {
+                    logger.LogWarning("Unhandled exception in {Handler}. Exception: {Exception}. Context: {Context}", handler, ex, ctx);
+                }
             }
             if(!ctx.IsSuccess())
             {

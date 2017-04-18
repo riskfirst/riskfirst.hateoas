@@ -10,6 +10,7 @@ using Xunit;
 
 namespace RiskFirst.Hateoas.Tests
 {
+    [Trait("Category","Evaluation")]
     public class DefaultLinksEvaluatorTests 
     {
         private LinksEvaluatorTestCase ConfigureTestCase(Action<TestCaseBuilder> configureTest)

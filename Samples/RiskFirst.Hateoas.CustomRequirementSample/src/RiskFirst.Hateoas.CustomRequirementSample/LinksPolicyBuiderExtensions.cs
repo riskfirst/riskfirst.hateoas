@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using RiskFirst.Hateoas.CustomRequirementSample.Requirement;
 
 namespace RiskFirst.Hateoas.CustomRequirementSample
 {
@@ -10,7 +7,7 @@ namespace RiskFirst.Hateoas.CustomRequirementSample
         public static LinksPolicyBuilder<TResource> RequiresApiRootLink<TResource>(this LinksPolicyBuilder<TResource> builder)
             where TResource : class
         {
-            return builder.Requires<Requirement.RootLinkRequirement<TResource>>();
+            return builder.Requires<ApiRootLinkRequirement>();
         }
     }
 }

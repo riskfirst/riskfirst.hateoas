@@ -2,6 +2,7 @@
 using RiskFirst.Hateoas.Implementation;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace RiskFirst.Hateoas
 {
@@ -10,25 +11,33 @@ namespace RiskFirst.Hateoas
         public LinksPolicyBuilder()
         {
         }
-        private IList<ILinksRequirement<TResource>> Requirements { get; } = new List<ILinksRequirement<TResource>>();
+        private IList<ILinksRequirement> Requirements { get; } = new List<ILinksRequirement/*<TResource>*/>();
 
+        public LinksPolicyBuilder<TResource> Combine(ILinksPolicy policy)
+        {
+            foreach(var requirement in policy.Requirements)
+            {
+                Requirements.Add(requirement);
+            }
+            return this;
+        }
         
         public LinksPolicyBuilder<TResource> Requires<TRequirement>()
-            where TRequirement : ILinksRequirement<TResource>, new()
+            where TRequirement : ILinksRequirement, new()
         {
             Requirements.Add(new TRequirement());
             return this;
         }
         public LinksPolicyBuilder<TResource> Requires<TRequirement>(TRequirement requirement)
-            where TRequirement : ILinksRequirement<TResource>
+            where TRequirement : ILinksRequirement
         {
             Requirements.Add(requirement);
             return this;
         }             
 
-        public LinksPolicy<TResource> Build()
+        public LinksPolicy Build()
         {
-            return new LinksPolicy<TResource>(Requirements);
+            return new LinksPolicy(Requirements);
         }
 
     }

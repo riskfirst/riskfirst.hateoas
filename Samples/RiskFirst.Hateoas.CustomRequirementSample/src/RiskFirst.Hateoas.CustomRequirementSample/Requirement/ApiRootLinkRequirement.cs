@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace RiskFirst.Hateoas.CustomRequirementSample.Requirement
 {
-    public class RootLinkRequirement<TResource> : ILinksRequirement<TResource>
+    public class ApiRootLinkRequirement : ILinksRequirement
     {
-        public RootLinkRequirement()
+        public ApiRootLinkRequirement()
         {
         }
         public string Id { get; set; } = "root";

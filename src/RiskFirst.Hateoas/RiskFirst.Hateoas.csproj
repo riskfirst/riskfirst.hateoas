@@ -18,10 +18,13 @@
     <RepositoryType>GIT</RepositoryType>
     <PackageTags>HATEOAS aspnet dotnetcore</PackageTags>
     <PackageReleaseNotes>v0.0.1 - Initial release
-v1.0.0 - first stable release
-v1.0.1 - bug fixes</PackageReleaseNotes>
-    <Version>1.0.1</Version>
+v1.0.0 - First stable release
+v1.0.1 - Bug fixes to 1.0.0
+v1.1.0 - Refactored a lot of the library to simplify the use of generics, enabling implementation of ability to Combine policies.</PackageReleaseNotes>
+    <Version>1.1.0-rc1</Version>
     <PackageIconUrl>https://www.riskfirst.com/media/1207/riskfirst-logo.png</PackageIconUrl>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
+    <FileVersion>1.1.0.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

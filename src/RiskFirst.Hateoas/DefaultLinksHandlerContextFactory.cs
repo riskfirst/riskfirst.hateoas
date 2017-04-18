@@ -20,10 +20,10 @@ namespace RiskFirst.Hateoas
             this.actionContext = actionAccessor.ActionContext;
             this.loggerFactory = loggerFactory;
         }
-        public LinksHandlerContext<TResource> CreateContext<TResource>(IEnumerable<ILinksRequirement> requirements, TResource resource)
+        public LinksHandlerContext CreateContext(IEnumerable<ILinksRequirement> requirements, object resource)
         {
-            var logger = loggerFactory.CreateLogger<LinksHandlerContext<TResource>>();
-            return new LinksHandlerContext<TResource>(requirements, routeMap, authService,logger, actionContext, resource);
+            var logger = loggerFactory.CreateLogger<LinksHandlerContext>();
+            return new LinksHandlerContext(requirements, routeMap, authService, logger, actionContext, resource);
         }
     }
 }

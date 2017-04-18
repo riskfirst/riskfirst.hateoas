@@ -16,6 +16,8 @@ using RiskFirst.Hateoas.Models;
 
 namespace RiskFirst.Hateoas.Tests
 {
+
+    [Trait("Category", "Service")]
     public class DefaultLinkServiceTests 
     {
         private LinksServiceTestCase ConfigureTestCase(Action<TestCaseBuilder> configureTest)
@@ -60,7 +62,7 @@ namespace RiskFirst.Hateoas.Tests
         [AutonamedFact]
         [Trait("Requirement","SelfLink")]
         [Trait("PolicySelection", "DefaultType")]
-        public async Task SelfLink_GivenNoRouteValues_AddsLinkToModel()
+        public async Task GivenNoRouteValues_AddsLinkToModel()
         {
             // Arrange
             var testCase = ConfigureTestCase(builder =>
@@ -92,7 +94,7 @@ namespace RiskFirst.Hateoas.Tests
         [AutonamedFact]
         [Trait("Requirement", "SelfLink")]
         [Trait("PolicySelection", "DefaultType")]
-        public async Task SelfLink_GivenRouteValues_AddsLinkToModel()
+        public async Task GivenRouteValues_AddsLinkToModel()
         {
             // Arrange
             var testCase = ConfigureTestCase(builder =>
@@ -129,7 +131,7 @@ namespace RiskFirst.Hateoas.Tests
         [Trait("Requirement", "RoutedLink")]
         [Trait("PolicySelection", "DefaultType")]
         [MemberData("CreateRoutedLinkTestData")]
-        public async Task RoutedLink_GivenValidRoute_AddsLinkToModel(int? id, RoutedLinkExpectation expectation)
+        public async Task GivenValidRoute_AddsLinkToModel(int? id, RoutedLinkExpectation expectation)
         {
             // Arrange
             var testCase = ConfigureTestCase(builder =>
@@ -163,7 +165,7 @@ namespace RiskFirst.Hateoas.Tests
         [MemberData("CreateRoutedLinkTestData")]
         [Trait("Requirement", "RoutedLink")]
         [Trait("PolicySelection", "DefaultType")]
-        public async Task RoutedLink_GivenValidRouteWithAssertion_AddsLinkToModel(int? id, RoutedLinkExpectation expectation)
+        public async Task GivenValidRouteWithAssertion_AddsLinkToModel(int? id, RoutedLinkExpectation expectation)
         {
             // Arrange
             var testCase = ConfigureTestCase(builder =>
@@ -198,7 +200,7 @@ namespace RiskFirst.Hateoas.Tests
         [MemberData("CreateRoutedLinkTestData")]
         [Trait("Requirement", "RoutedLink")]
         [Trait("PolicySelection", "DefaultType")]
-        public async Task RoutedLink_GivenValidRouteWithNegativeAssertion_DoesNotAddLinkToModel(int? id, RoutedLinkExpectation expectation)
+        public async Task GivenValidRouteWithNegativeAssertion_DoesNotAddLinkToModel(int? id, RoutedLinkExpectation expectation)
         {
             // Arrange
             var testCase = ConfigureTestCase(builder =>
@@ -231,7 +233,7 @@ namespace RiskFirst.Hateoas.Tests
         [MemberData("CreateRoutedLinkTestData")]
         [Trait("Requirement", "RoutedLink")]
         [Trait("PolicySelection", "DefaultType")]
-        public async Task RoutedLink_GivenValidAndInvalidRoutes_AddsLinkToModelAndSkipsInvalidLink(int? id, RoutedLinkExpectation expectation)
+        public async Task GivenValidAndInvalidRoutes_AddsLinkToModelAndSkipsInvalidLink(int? id, RoutedLinkExpectation expectation)
         {
             // Arrange
             var testCase = ConfigureTestCase(builder =>
@@ -270,7 +272,7 @@ namespace RiskFirst.Hateoas.Tests
         [MemberData("CreateRoutedLinkTestData")]
         [Trait("Requirement", "RoutedLink")]
         [Trait("PolicySelection", "DefaultType")]
-        public async Task RoutedLink_GivenValidRouteRequireingAuth_AddsLinkToModel_WhenGranted(int? id, RoutedLinkExpectation expectation)
+        public async Task GivenValidRouteRequireingAuth_AddsLinkToModel_WhenGranted(int? id, RoutedLinkExpectation expectation)
         {
             // Arrange
             var testCase = ConfigureTestCase(builder =>
@@ -307,7 +309,7 @@ namespace RiskFirst.Hateoas.Tests
         [MemberData("CreateRoutedLinkTestData")]
         [Trait("Requirement", "RoutedLink")]
         [Trait("PolicySelection", "DefaultType")]
-        public async Task RoutedLink_GivenValidRouteRequireingAuth_DoesNotAddLinkToModel_WhenDenied(int? id, RoutedLinkExpectation expectation)
+        public async Task GivenValidRouteRequireingAuth_DoesNotAddLinkToModel_WhenDenied(int? id, RoutedLinkExpectation expectation)
         {
             // Arrange
             var testCase = ConfigureTestCase(builder =>
@@ -343,7 +345,7 @@ namespace RiskFirst.Hateoas.Tests
         [MemberData("CreateRoutedLinkTestData")]
         [Trait("Requirement", "RoutedLink")]
         [Trait("PolicySelection", "MethodOverride")]
-        public async Task RoutedLink_GivenValidRouteWithRouteOverride_AddsLinkToModel(int? id, RoutedLinkExpectation expectation)
+        public async Task GivenValidRouteWithRouteOverride_AddsLinkToModel(int? id, RoutedLinkExpectation expectation)
         {
             // Arrange
             var testCase = ConfigureTestCase(builder =>
@@ -386,7 +388,7 @@ namespace RiskFirst.Hateoas.Tests
         [MemberData("CreateRoutedLinkTestData")]
         [Trait("Requirement", "RoutedLink")]
         [Trait("PolicySelection", "MethodOverride")]
-        public async Task RoutedLink_GivenValidRouteWithEmptyRouteOverride_AddsLinkToModel(int? id, RoutedLinkExpectation expectation)
+        public async Task GivenValidRouteWithEmptyRouteOverride_AddsLinkToModel(int? id, RoutedLinkExpectation expectation)
         {
             // Arrange
             var testCase = ConfigureTestCase(builder =>
@@ -424,7 +426,7 @@ namespace RiskFirst.Hateoas.Tests
         [AutonamedFact]
         [Trait("Requirement", "RoutedLink")]
         [Trait("PolicySelection", "MethodOverride")]
-        public async Task RoutedLink_GivenInvalidRouteWithRouteOverride_ThrowsException()
+        public async Task GivenInvalidRouteWithRouteOverride_ThrowsException()
         {
             // Arrange
             var testCase = ConfigureTestCase(builder =>
@@ -458,7 +460,7 @@ namespace RiskFirst.Hateoas.Tests
         [AutonamedFact]
         [Trait("Requirement", "RoutedLink")]
         [Trait("PolicySelection", "MethodOverride")]
-        public async Task RoutedLink_GivenInvalidRouteWithEmptyRouteOverride_ThrowsException()
+        public async Task GivenInvalidRouteWithEmptyRouteOverride_ThrowsException()
         {
             // Arrange
             var testCase = ConfigureTestCase(builder =>
@@ -488,7 +490,7 @@ namespace RiskFirst.Hateoas.Tests
         [MemberData("CreateRoutedLinkTestData")]
         [Trait("Requirement", "RoutedLink")]
         [Trait("PolicySelection", "TypeOverride")]
-        public async Task RoutedLink_GivenValidRouteWithTypeOverride_AddsLinkToModel(int? id, RoutedLinkExpectation expectation)
+        public async Task GivenValidRouteWithTypeOverride_AddsLinkToModel(int? id, RoutedLinkExpectation expectation)
         {
             // Arrange
             var testCase = ConfigureTestCase(builder =>
@@ -527,7 +529,7 @@ namespace RiskFirst.Hateoas.Tests
         [MemberData("CreateRoutedLinkTestData")]
         [Trait("Requirement", "RoutedLink")]
         [Trait("PolicySelection", "TypeOverride")]
-        public async Task RoutedLink_GivenValidRouteWithEmptyTypeOverride_AddsLinkToModel(int? id, RoutedLinkExpectation expectation)
+        public async Task GivenValidRouteWithEmptyTypeOverride_AddsLinkToModel(int? id, RoutedLinkExpectation expectation)
         {
             // Arrange
             var testCase = ConfigureTestCase(builder =>
@@ -561,7 +563,7 @@ namespace RiskFirst.Hateoas.Tests
         [AutonamedFact]
         [Trait("Requirement", "RoutedLink")]
         [Trait("PolicySelection", "TypeOverride")]
-        public async Task RoutedLink_GivenInvalidRouteWithTypeOverride_ThrowsException()
+        public async Task GivenInvalidRouteWithTypeOverride_ThrowsException()
         {
             // Arrange
             var testCase = ConfigureTestCase(builder =>
@@ -591,7 +593,7 @@ namespace RiskFirst.Hateoas.Tests
         [AutonamedFact]
         [Trait("Requirement", "RoutedLink")]
         [Trait("PolicySelection", "TypeOverride")]
-        public async Task RoutedLink_GivenInvalidRouteWithEmptyTypeOverride_ThrowsException()
+        public async Task GivenInvalidRouteWithEmptyTypeOverride_ThrowsException()
         {
             // Arrange
             var testCase = ConfigureTestCase(builder =>
@@ -617,7 +619,7 @@ namespace RiskFirst.Hateoas.Tests
         [MemberData("CreateRoutedLinkTestData")]
         [Trait("Requirement", "RoutedLink")]
         [Trait("PolicySelection", "NamedOverride")]
-        public async Task RoutedLink_GivenValidRouteWithNamedOverride_AddsLinkToModel(int? id, RoutedLinkExpectation expectation)
+        public async Task GivenValidRouteWithNamedOverride_AddsLinkToModel(int? id, RoutedLinkExpectation expectation)
         {
             // Arrange
             var testCase = ConfigureTestCase(builder =>
@@ -655,7 +657,7 @@ namespace RiskFirst.Hateoas.Tests
         [AutonamedFact]
         [Trait("Requirement", "RoutedLink")]
         [Trait("PolicySelection", "NamedOverride")]
-        public async Task RoutedLink_GivenInvalidRouteWithNamedOverride_ThrowsException()
+        public async Task GivenInvalidRouteWithNamedOverride_ThrowsException()
         {
             // Arrange
             var testCase = ConfigureTestCase(builder =>
@@ -699,7 +701,8 @@ namespace RiskFirst.Hateoas.Tests
         [AutonamedTheory]
         [MemberData("CreatePagedLinkTestData")]
         [Trait("Requirement", "PagedLink")]
-        public async Task PagedLink_GivenMultiplePages_AddsCorrectLinksToModel(int pageSize, int pageCount, int pageNumber, IEnumerable<PagedLinkExpectation> linkExpectations)
+        [Trait("PolicySelection", "DefaultType")]
+        public async Task GivenMultiplePages_AddsCorrectLinksToModel(int pageSize, int pageCount, int pageNumber, IEnumerable<PagedLinkExpectation> linkExpectations)
         {
             // Arrange
             var testCase = ConfigureTestCase(builder =>
@@ -746,7 +749,8 @@ namespace RiskFirst.Hateoas.Tests
         [AutonamedTheory]
         [Trait("Requirement", "PagedLink")]
         [MemberData("CreatePagedLinkTestData")]
-        public async Task PagedLink_GivenMultiplePagesWithAssertion_AddsCorrectLinksToModel(int pageSize, int pageCount, int pageNumber, IEnumerable<PagedLinkExpectation> linkExpectations)
+        [Trait("PolicySelection", "DefaultType")]
+        public async Task GivenMultiplePagesWithAssertion_AddsCorrectLinksToModel(int pageSize, int pageCount, int pageNumber, IEnumerable<PagedLinkExpectation> linkExpectations)
         {
             // Arrange
             var testCase = ConfigureTestCase(builder =>
@@ -793,7 +797,8 @@ namespace RiskFirst.Hateoas.Tests
         [AutonamedTheory]
         [Trait("Requirement", "PagedLink")]
         [MemberData("CreatePagedLinkTestData")]
-        public async Task PagedLink_GivenMultiplePagesWithNegativeAssertion_DoesNotAddLinksToModel(int pageSize, int pageCount, int pageNumber, IEnumerable<PagedLinkExpectation> linkExpectations)
+        [Trait("PolicySelection", "DefaultType")]
+        public async Task GivenMultiplePagesWithNegativeAssertion_DoesNotAddLinksToModel(int pageSize, int pageCount, int pageNumber, IEnumerable<PagedLinkExpectation> linkExpectations)
         {
             // Arrange
             var testCase = ConfigureTestCase(builder =>
@@ -829,7 +834,8 @@ namespace RiskFirst.Hateoas.Tests
         [AutonamedTheory]
         [Trait("Requirement", "PagedLink")]
         [MemberData("CreatePagedLinkTestData")]
-        public async Task PagedLink_GivenMultiplePagesRequireingAuth_AddsLinksToModel_WhenGranted(int pageSize, int pageCount, int pageNumber, IEnumerable<PagedLinkExpectation> linkExpectations)
+        [Trait("PolicySelection", "DefaultType")]
+        public async Task GivenMultiplePagesRequireingAuth_AddsLinksToModel_WhenGranted(int pageSize, int pageCount, int pageNumber, IEnumerable<PagedLinkExpectation> linkExpectations)
         {
             // Arrange
             var testCase = ConfigureTestCase(builder =>
@@ -878,7 +884,8 @@ namespace RiskFirst.Hateoas.Tests
         [AutonamedTheory]
         [Trait("Requirement", "PagedLink")]
         [MemberData("CreatePagedLinkTestData")]
-        public async Task PagedLink_GivenMultiplePagesRequireingAuth_DoesNotAddLinksToModel_WhenDenied(int pageSize, int pageCount, int pageNumber, IEnumerable<PagedLinkExpectation> linkExpectations)
+        [Trait("PolicySelection", "DefaultType")]
+        public async Task GivenMultiplePagesRequireingAuth_DoesNotAddLinksToModel_WhenDenied(int pageSize, int pageCount, int pageNumber, IEnumerable<PagedLinkExpectation> linkExpectations)
         {
             // Arrange
             var testCase = ConfigureTestCase(builder =>
@@ -948,6 +955,7 @@ namespace RiskFirst.Hateoas.Tests
 
         #region CustomRequirement Tests
         [AutonamedFact]
+        [Trait("Requirement","Custom")]
         public async Task CustomRequirement_GivenCustomRequirementAndHandler_AddsLinkToModel()
         {
             // Arrange
@@ -979,6 +987,7 @@ namespace RiskFirst.Hateoas.Tests
         }
 
         [AutonamedFact]
+        [Trait("Requirement", "Custom")]
         public async Task CustomRequirement_GivenCustomRequirementWithoutHandler_WritesWarning()
         {
             // Arrange
@@ -1004,6 +1013,256 @@ namespace RiskFirst.Hateoas.Tests
             Assert.True(model.Links.Count == 0, "Incorrect number of links applied");
             testCase.ServiceLoggerMock.Verify(x => x.Log(LogLevel.Warning,It.IsAny<EventId>(), It.IsAny<object>(), null,It.IsAny<Func<object,Exception,string>>()));
         }
+
+        [AutonamedFact]
+        [Trait("Requirement", "Custom")]
+        public async Task CustomRequirement_GivenCustomRequirementAndHandlerWhichThrowsException_AddsOtherLinkAndWritesWarning()
+        {
+            // Arrange
+            var testCase = ConfigureTestCase(builder =>
+            {
+                builder.UseBasicTransformations()
+                    .WithTestRouteMap(routes =>
+                    {
+                        routes.AddRoute(new RouteInfo("Route1", HttpMethod.Get, new Mock<IControllerMethodInfo>().Object))
+                            .AddRoute(new RouteInfo("TestRoute", HttpMethod.Get, new Mock<IControllerMethodInfo>().Object))
+                            .SetCurrentRoute("Route1");
+                    })
+                    .WithHandler<ExceptionRequirementHandler<TestLinkContainer>>()
+                    .AddPolicy<TestLinkContainer>(policy =>
+                    {
+                        policy.Requires<TestRequirement<TestLinkContainer>>()
+                                .RequireRoutedLink("testLink","TestRoute");
+                    });
+            });
+
+            // Act
+            var model = new TestLinkContainer();
+            await testCase.UnderTest.AddLinksAsync(model);
+
+            // Assert
+            Assert.True(model.Links.Count == 1, "Incorrect number of links applied");
+            Assert.Equal("TestRoute", model.Links["testLink"].Href);
+            var contextMock = testCase.LinksHandlerContextFactory.GetLinksHandlerContextMock<TestLinkContainer>();
+            contextMock.Verify(x => x.Handled(It.IsAny<TestRequirement<TestLinkContainer>>()), Times.Never());
+            contextMock.Verify(x => x.Handled(It.IsAny<RouteLinkRequirement<TestLinkContainer>>()), Times.Once());
+            testCase.ServiceLoggerMock.Verify(x => x.Log(LogLevel.Warning, It.IsAny<EventId>(), It.IsAny<object>(), null, It.IsAny<Func<object, Exception, string>>()));
+        }
+        #endregion
+
+        #region Combining Policies Tests
+        [AutonamedFact]
+        [Trait("Requirement", "RoutedLink")]
+        [Trait("PolicySelection", "NamedOverride")]
+        public async Task WhenCombiningSameType_AddsCorrectLinksToModel()
+        {
+            // Arrange
+            var testCase = ConfigureTestCase(builder =>
+            {
+                builder.UseBasicTransformations()
+                      .WithTestRouteMap(routes =>
+                      {
+                          routes.AddRoute(new RouteInfo("Route1", HttpMethod.Get, new Mock<IControllerMethodInfo>().Object))
+                              .AddRoute(new RouteInfo("TestRoute1", HttpMethod.Get, new Mock<IControllerMethodInfo>().Object))
+                              .AddRoute(new RouteInfo("TestRoute2", HttpMethod.Get, new Mock<IControllerMethodInfo>().Object))
+                              .SetCurrentRoute("Route1");
+                      })
+                     .AddPolicy<TestLinkContainer>(policy =>
+                     {
+                         policy.RequireRoutedLink("testLink1", "TestRoute1");
+                     })
+                     .AddPolicy<TestLinkContainer>("MoreInfo", policy =>
+                     {
+                         policy.Combine(builder.GetPolicy<TestLinkContainer>())
+                                .RequireRoutedLink("testLink2", "TestRoute2");
+                     });
+            });
+
+
+            // Act
+            var model = new TestLinkContainer();
+            await testCase.UnderTest.AddLinksAsync(model,"MoreInfo");
+
+            // Assert
+            Assert.True(model.Links.Count == 2, "Incorrect number of links applied");
+            Assert.Equal("TestRoute1", model.Links["testLink1"].Href);
+            Assert.Equal("TestRoute2", model.Links["testLink2"].Href);
+
+            var contextMock = testCase.LinksHandlerContextFactory.GetLinksHandlerContextMock<TestLinkContainer>();
+            contextMock.Verify(x => x.Handled(It.IsAny<RouteLinkRequirement<TestLinkContainer>>()), Times.Exactly(2));
+        }
+
+        [AutonamedTheory()]
+        [MemberData("CreateRoutedLinkTestData")]
+        [Trait("Requirement", "RoutedLink")]
+        [Trait("PolicySelection", "DefaultType")]
+        public async Task WhenCombiningWithBaseType_AddsCorrectLinksToModel(int? id, RoutedLinkExpectation expectation)
+        {
+            // Arrange
+            var testCase = ConfigureTestCase(builder =>
+            {
+                builder.UseBasicTransformations()
+                      .WithTestRouteMap(routes =>
+                      {
+                          routes.AddRoute(new RouteInfo("Route1", HttpMethod.Get, new Mock<IControllerMethodInfo>().Object))
+                              .AddRoute(new RouteInfo("TestRoute1", HttpMethod.Get, new Mock<IControllerMethodInfo>().Object))
+                              .AddRoute(new RouteInfo("TestRoute2", HttpMethod.Get, new Mock<IControllerMethodInfo>().Object))
+                              .SetCurrentRoute("Route1");
+                      })
+                     .AddPolicy<TestLinkContainer>(policy =>
+                     {
+                         policy.RequireRoutedLink("testLink1", "TestRoute1", x => !id.HasValue ? null : new { id = x.Id });
+                     })
+                     .AddPolicy<DerivedLinkContainer>(policy =>
+                     {
+                         policy.Combine(builder.GetPolicy<TestLinkContainer>())
+                                .RequireRoutedLink("testLink2", "TestRoute2", x => !id.HasValue ? null : new { id = x.Id });
+                     });
+            });
+
+
+            // Act
+            var model = new DerivedLinkContainer() { Id = id ?? 0 };
+            await testCase.UnderTest.AddLinksAsync(model);
+
+            // Assert
+            Assert.True(model.Links.Count == 2, "Incorrect number of links applied");
+            Assert.Equal("TestRoute1" + expectation.ExpectedQueryString, model.Links["testLink1"].Href);
+            Assert.Equal("TestRoute2" + expectation.ExpectedQueryString, model.Links["testLink2"].Href);
+
+            var contextMock = testCase.LinksHandlerContextFactory.GetLinksHandlerContextMock<TestLinkContainer>();
+            contextMock.Verify(x => x.Handled(It.IsAny<RouteLinkRequirement<TestLinkContainer>>()), Times.Once);
+            contextMock.Verify(x => x.Handled(It.IsAny<RouteLinkRequirement<DerivedLinkContainer>>()), Times.Once);
+        }
+
+        [AutonamedTheory]
+        [MemberData("CreatePagedLinkTestData")]
+        [Trait("Requirement", "PagedLink")]
+        [Trait("PolicySelection", "DefaultType")]
+        public async Task WhenCombiningWithInterfaceType_AddsCorrectLinksToModel(int pageSize, int pageCount, int pageNumber, IEnumerable<PagedLinkExpectation> linkExpectations)
+        {
+            // Arrange
+            var testCase = ConfigureTestCase(builder =>
+            {
+                builder.UseBasicTransformations()
+                      .WithTestRouteMap(routes =>
+                      {
+                          routes.AddRoute(new RouteInfo("PagedRoute", HttpMethod.Get, new Mock<IControllerMethodInfo>().Object))
+                              .SetCurrentRoute("PagedRoute");
+                      })
+                     .AddPolicy<IPagedLinkContainer>(policy =>
+                     {
+                         policy.RequiresPagingLinks();
+                     })
+                     .AddPolicy<TestPagedLinkContainer>(policy =>
+                     {
+                         policy.Combine(builder.GetPolicy<IPagedLinkContainer>())
+                                .RequireSelfLink();
+                     });
+            });
+
+            // Act
+            var model = new TestPagedLinkContainer()
+            {
+                PageSize = pageSize,
+                PageCount = pageCount,
+                PageNumber = pageNumber
+            };
+            await testCase.UnderTest.AddLinksAsync(model);
+
+            // Assert
+            foreach (var exp in linkExpectations)
+            {
+                if (exp.ShouldExist)
+                {
+                    Assert.True(model.Links.ContainsKey(exp.Id));
+                    Assert.Equal($"PagedRoute?pagenumber={exp.ExpectedPageNumber}&pagesize={exp.ExpectedPageSize}", model.Links[exp.Id].Href);
+                }
+                else
+                {
+                    Assert.False(model.Links.ContainsKey(exp.Id));
+                }
+            }
+            Assert.True(model.Links.ContainsKey("self"), "Missing self link");
+
+            var contextMock = testCase.LinksHandlerContextFactory.GetLinksHandlerContextMock<TestPagedLinkContainer>();
+            contextMock.Verify(x => x.Handled(It.IsAny<PagingLinksRequirement<IPagedLinkContainer>>()), Times.Once());
+            contextMock.Verify(x => x.Handled(It.IsAny<SelfLinkRequirement<TestPagedLinkContainer>>()), Times.Once());
+        }
+
+        [AutonamedFact()]
+        [Trait("Requirement", "RoutedLink")]
+        [Trait("PolicySelection", "DefaultType")]
+        public async Task WhenCombiningWithDerivedType_ThrowsException()
+        {
+            // Arrange
+            var testCase = ConfigureTestCase(builder =>
+            {
+                builder.UseBasicTransformations()
+                      .WithTestRouteMap(routes =>
+                      {
+                          routes.AddRoute(new RouteInfo("Route1", HttpMethod.Get, new Mock<IControllerMethodInfo>().Object))
+                              .AddRoute(new RouteInfo("TestRoute1", HttpMethod.Get, new Mock<IControllerMethodInfo>().Object))
+                              .AddRoute(new RouteInfo("TestRoute2", HttpMethod.Get, new Mock<IControllerMethodInfo>().Object))
+                              .SetCurrentRoute("Route1");
+                      })
+                     .AddPolicy<DerivedLinkContainer>(policy =>
+                     {
+                         policy.RequireRoutedLink("testLink1", "TestRoute1");
+                     })
+                     .AddPolicy<TestLinkContainer>(policy =>
+                     {
+                         policy.Combine(builder.GetPolicy<DerivedLinkContainer>())
+                                .RequireRoutedLink("testLink2", "TestRoute2");
+                     });
+            });
+
+
+            // Act
+            var model = new TestLinkContainer();
+
+
+            // Assert
+            await Assert.ThrowsAsync<InvalidCastException>(() => testCase.UnderTest.AddLinksAsync(model));
+        }
+
+        [AutonamedFact()]
+        [Trait("Requirement", "RoutedLink")]
+        [Trait("PolicySelection", "DefaultType")]
+        public async Task WhenCombiningWithUnrelatedType_ThrowsException()
+        {
+            // Arrange
+            var testCase = ConfigureTestCase(builder =>
+            {
+                builder.UseBasicTransformations()
+                      .WithTestRouteMap(routes =>
+                      {
+                          routes.AddRoute(new RouteInfo("Route1", HttpMethod.Get, new Mock<IControllerMethodInfo>().Object))
+                              .AddRoute(new RouteInfo("TestRoute1", HttpMethod.Get, new Mock<IControllerMethodInfo>().Object))
+                              .AddRoute(new RouteInfo("TestRoute2", HttpMethod.Get, new Mock<IControllerMethodInfo>().Object))
+                              .SetCurrentRoute("Route1");
+                      })
+                     .AddPolicy<UnrelatedLinkContainer>(policy =>
+                     {
+                         policy.RequireRoutedLink("testLink1", "TestRoute1");
+                     })
+                     .AddPolicy<TestLinkContainer>(policy =>
+                     {
+                         policy.Combine(builder.GetPolicy<UnrelatedLinkContainer>())
+                                .RequireRoutedLink("testLink2", "TestRoute2");
+                     });
+            });
+
+
+            // Act
+            var model = new TestLinkContainer();
+
+
+            // Assert
+            await Assert.ThrowsAsync<InvalidCastException>(() => testCase.UnderTest.AddLinksAsync(model));
+        }
         #endregion
     }
+
+   
 }

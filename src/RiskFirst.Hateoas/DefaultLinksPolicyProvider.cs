@@ -16,17 +16,17 @@ namespace RiskFirst.Hateoas
 
             this.options = options.Value;
         }
-        public Task<ILinksPolicy<ILinkContainer>> GetDefaultPolicyAsync()
+        public Task<ILinksPolicy> GetDefaultPolicyAsync()
         {
             return Task.FromResult(options.DefaultPolicy);
         }
 
-        public Task<ILinksPolicy<TResource>> GetPolicyAsync<TResource>()
+        public Task<ILinksPolicy> GetPolicyAsync<TResource>()
         {
             return Task.FromResult(options.GetPolicy<TResource>());
         }
 
-        public Task<ILinksPolicy<TResource>> GetPolicyAsync<TResource>(string policyName)
+        public Task<ILinksPolicy> GetPolicyAsync<TResource>(string policyName)
         {
             return Task.FromResult(options.GetPolicy<TResource>(policyName));
         }

@@ -5,8 +5,8 @@ namespace RiskFirst.Hateoas
 {
     public interface ILinksPolicyProvider
     {
-        Task<ILinksPolicy<ILinkContainer>> GetDefaultPolicyAsync();
-        Task<ILinksPolicy<TResource>> GetPolicyAsync<TResource>();
-        Task<ILinksPolicy<TResource>> GetPolicyAsync<TResource>(string policyName);
+        Task<ILinksPolicy> GetDefaultPolicyAsync();
+        Task<ILinksPolicy> GetPolicyAsync<TResource>();
+        Task<ILinksPolicy> GetPolicyAsync<TResource>(string policyName);
     }
 }

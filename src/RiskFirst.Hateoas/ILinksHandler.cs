@@ -4,6 +4,6 @@ namespace RiskFirst.Hateoas
 {
     public interface ILinksHandler
     {
-        Task HandleAsync<T>(LinksHandlerContext<T> context);
+        Task HandleAsync(LinksHandlerContext context);
     }
 }

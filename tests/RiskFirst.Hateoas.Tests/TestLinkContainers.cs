@@ -10,6 +10,11 @@ namespace RiskFirst.Hateoas.Tests
         }
     }
 
+    public class DerivedLinkContainer : TestLinkContainer { }
+
+    public class UnrelatedLinkContainer : LinkContainer { }
+
+
     [Links(Policy = "OverridePolicy")]
     public class OverrideTestLinkContainer : LinkContainer
     {

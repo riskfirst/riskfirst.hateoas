@@ -7,7 +7,7 @@ namespace RiskFirst.Hateoas.Implementation
 {
     public class PassThroughLinksHandler : ILinksHandler
     {
-        public async Task HandleAsync<T>(LinksHandlerContext<T> context)
+        public async Task HandleAsync(LinksHandlerContext context)
         {
             foreach (var handler in context.Requirements.OfType<ILinksHandler>())
             {

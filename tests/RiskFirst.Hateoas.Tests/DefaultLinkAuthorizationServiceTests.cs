@@ -12,6 +12,7 @@ using Xunit;
 
 namespace RiskFirst.Hateoas.Tests
 {
+    [Trait("Category","Authorization")]
     public class DefaultLinkAuthorizationServiceTests
     {
         private LinksAuthorizationTestCase ConfigureTestCase(Action<TestCaseBuilder> configureTest = null)

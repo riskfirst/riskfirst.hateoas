@@ -15,7 +15,7 @@ namespace RiskFirst.Hateoas
     }
     public struct LinkSpec : ILinkSpec
     {
-        public LinkSpec(string id, RouteInfo routeInfo, RouteValueDictionary routeValues)
+        public LinkSpec(string id, RouteInfo routeInfo, RouteValueDictionary routeValues = null)
         {
             this.Id = id;
             this.RouteInfo = routeInfo;
