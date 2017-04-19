@@ -83,7 +83,7 @@ The above code would produce a response as the example below
       method: "GET"
     },
     delete: {
-      rel: "MyController\GetAllModelsRoute",
+      rel: "MyController\DeleteModelRoute",
       href: "https://api.example.com/my/1"
       method: "DELETE"
     }
