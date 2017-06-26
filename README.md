@@ -1,10 +1,12 @@
 # RiskFirst.Hateoas
 
+![CI Build](https://riskfirst.visualstudio.com/_apis/public/build/definitions/2e2e46bb-1ab7-484e-8117-335c3855d65d/326/badge)
+
 An implementation of [HATEOAS](https://en.wikipedia.org/wiki/HATEOAS) for aspnet core web api projects which gives full control of which links to apply to models returned from your api. In order to communicate varying state to the end-user, this library fully integrates with Authorization, and allows arbitrary conditions to determine whether to show or hide HATEOAS links between api resources.
 
 ### Getting started
 
-Install the package
+Install the package from [Nuget.org](https://www.nuget.org/packages/riskfirst.hateoas)
 
 ```powershell
 PM> Install-Package RiskFirst.Hateoas
@@ -81,7 +83,7 @@ The above code would produce a response as the example below
       method: "GET"
     },
     delete: {
-      rel: "MyController\GetAllModelsRoute",
+      rel: "MyController\DeleteModelRoute",
       href: "https://api.example.com/my/1"
       method: "DELETE"
     }
@@ -146,11 +148,38 @@ public class MyController : Controller
 }
 ```
 
-There are further overloads of ```AddLinksAsync``` which take an instance of  [```ILinksPolicy```](src/RiskFirst.Hateoas/ILinksPolicy.cs) or an array of [```ILinksRequirement```](src/RiskFirst.Hateoas/ILinksRequirement.cs) which will be evaluated at runtime. This should give complete control of which links are applied at any point within your api code.
+Another way to achieve the same thing is to mark the actual object with the `LinksAttribute`:
+
+```csharp
+[Links(Policy="FullInfo")]
+public class MyModel : LinksContainer
+{ }
+
+[Route("api/[controller]")]
+public class MyController : Controller
+{
+    private readonly ILinksService linksService;
+    
+    public MyController(ILinksService linksService)
+    {
+        this.linksService = linksService;
+    }
+   
+    [HttpGet("{id}",Name = "GetModelRoute")]
+    public async Task<MyModel> GetMyModel(int id)
+    {
+         MyModel model = await myRepository.GetMyModel(id);
+         await linksService.AddLinksAsync(model);
+         return model;
+    }
+}
+```
+
+There are further overloads of `AddLinksAsync` which take an instance of  [`ILinksPolicy`](src/RiskFirst.Hateoas/ILinksPolicy.cs) or an array of [`ILinksRequirement`](src/RiskFirst.Hateoas/ILinksRequirement.cs) which will be evaluated at runtime. This should give complete control of which links are applied at any point within your api code.
 
 ### Configuring Href and Rel transformations
 
-There should not have much need to change how the ```Href``` is transformed, however one common requirement is to output relative instead of absolute uris. This can be tried in the [Basic Sample](Samples/RiskFirst.Hateoas.BasicSample)
+There should not have much need to change how the `Href` is transformed, however one common requirement is to output relative instead of absolute uris. This can be tried in the [Basic Sample](Samples/RiskFirst.Hateoas.BasicSample)
 
 ```csharp
 services.AddLinks(config => 
@@ -160,7 +189,7 @@ services.AddLinks(config =>
 });
 ```
 
-Both Href and Rel transformations can be fully controlled by supplying a class or Type which implements [```ILinkTransformation```](src/RiskFirst.Hateoas/ILinkTransformation.cs).
+Both Href and Rel transformations can be fully controlled by supplying a class or Type which implements [`ILinkTransformation`](src/RiskFirst.Hateoas/ILinkTransformation.cs).
 
 ```csharp
 services.AddLinks(config => 
@@ -189,7 +218,7 @@ Both ways of customizaing transformations can be seen in the [LinkConfigurationS
 
 It is likely that you wish to control which links are included with each model, and one common requirement is to only show links for which the current user is authorized. This library fully integrates into the authorization pipeline and will apply any authorization policy you have applied to the linked action.
 
-To enable authorization on a link provide the ```AuthorizeRoute``` condition.
+To enable authorization on a link provide the `AuthorizeRoute` condition.
 
 ```csharp
 public class Startup
@@ -234,8 +263,11 @@ You are free to add your own requirements using the generic `Requires` method on
 ```csharp
 using RiskFirst.Hateoas;
 
-public class RootLinkRequirement<TResource> : ILinksRequirement<TResource>
+public class ApiRootLinkRequirement : ILinksRequirement
 {
+    public ApiRootLinkRequirement()
+    {
+    }
     public string Id { get; set; } = "root";
 }
 ```
@@ -244,16 +276,14 @@ Given this requirement, we need a class to handle it, which must implement `ILin
 ```csharp
 using RiskFirst.Hateoas;
 
-public class RootLinkHandler : ILinksHandler
+public class ApiRootLinkHandler : LinksHandler<ApiRootLinkRequirement>
 {
-    public async Task HandleAsync<T>(LinksHandlerContext<T> context)
-    [
-      var route = context.RouteMap.GetRoute("ApiRoot"); // Asumes your controller has a named route "ApiRoot".
-      foreach(var requirement in context.Requirements.OfType<RootLinkRequirement>())
-      {
-        context.Links.Add(new LinkSpec(requirement.Id,route,null);
+    protected override Task HandleRequirementAsync(LinksHandlerContext context, ApiRootLinkRequirement requirement)
+    {
+        var route = context.RouteMap.GetRoute("ApiRoot"); // Assumes your API has a named route "ApiRoot".
+        context.Links.Add(new LinkSpec(requirement.Id, route));
         context.Handled(requirement);
-      }      
+        return Task.CompletedTask;
     }
 }
 ```
@@ -267,16 +297,19 @@ public class Startup
   {   
     services.AddLinks(config => 
     {
-      config.AddPolicy<MyModel>(policy => {
+      config.AddPolicy<MyModel>(policy => 
+      {
           policy.RequiresRoutedLink("self","GetModelRoute", x => new {id = x.Id })
-                .Requires<RootLinkRequirement>();
+                .Requires<ApiRootLinkRequirement>();
       });
     });
     
-    services.AddTransient<ILinksHandler,RootLinkHandler>();
+    services.AddTransient<ILinksHandler,ApiRootLinkHandler>();
   }
 }
 ```
+
+This example is demonstrated in the [`CustomRequirementSample`](samples/RiskFirst.Hateoas.CustomRequirementSample)
 
 There are many additional parts of the framework which can be extended by writing your own implementation of the appropriate interface and registering it with `IServicesCollection` for dependency injection. For example, you could change the way that links are evaluated and applied to your link container by implementing your own [`ILinksEvaluator`](src/RiskFirst.Hateoas/ILinksEvaluator.cs)
 
@@ -308,4 +341,18 @@ controls how links are authorized during link condition evaluation.
 
 ### Troubleshooting
 
-Nothing here yet!
+#### Upgrading from v1.0.x to v1.1.x
+
+The change from version 1.0.x to 1.1.x was mostly non-breaking, however if you have implemented any custom requirement handlers as described in the example above the signature of the base class `LinksHandler` changed slightly to remove the duplicate declaration of the generic type `TResource`. 
+
+In v1.0.x your code may have looked like:
+
+```csharp
+public class MyCustomHandler : ILinksHandler { ... }
+```
+
+It should now inherit from `LinksHandler<TRequirement>` making implementation simpler, and giving a type-safe override of `HandleRequirementAsync` giving access to your correctly-typed requirement.
+
+```csharp
+public class MyCustomHandler : LinksHandler<MyCustomRequirement>
+```
