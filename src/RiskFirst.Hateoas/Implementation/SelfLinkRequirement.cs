@@ -19,7 +19,7 @@ namespace RiskFirst.Hateoas.Implementation
 
             context.Links.Add(new LinkSpec(requirement.Id, route, values));
             context.Handled(requirement);
-            return Task.CompletedTask;
+            return Task.FromResult(true);
         }
     }
 }

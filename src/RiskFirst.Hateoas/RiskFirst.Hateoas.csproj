@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.6</TargetFramework>
+    <TargetFrameworks>netstandard1.6;net451</TargetFrameworks>
     <AssemblyName>RiskFirst.Hateoas</AssemblyName>
     <PackageId>RiskFirst.Hateoas</PackageId>
     <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
@@ -20,11 +20,12 @@
     <PackageReleaseNotes>v0.0.1 - Initial release
 v1.0.0 - First stable release
 v1.0.1 - Bug fixes to 1.0.0
-v1.1.0 - Refactored a lot of the library to simplify the use of generics, enabling implementation of ability to Combine policies.</PackageReleaseNotes>
-    <Version>1.1.0-rc1</Version>
-    <PackageIconUrl>https://www.riskfirst.com/media/1207/riskfirst-logo.png</PackageIconUrl>
-    <AssemblyVersion>1.1.0.0</AssemblyVersion>
-    <FileVersion>1.1.0.0</FileVersion>
+v1.1.0 - Refactored a lot of the library to simplify the use of generics, enabling implementation of ability to Combine policies.
+v1.1.1 - Support for .NET Framewoork 4.5.1</PackageReleaseNotes>
+    <Version>1.1.1</Version>
+    <PackageIconUrl>https://raw.githubusercontent.com/riskfirst/pkgicons/master/riskfirst-pkg.png</PackageIconUrl>
+    <AssemblyVersion>1.1.1.0</AssemblyVersion>
+    <FileVersion>1.1.1.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
