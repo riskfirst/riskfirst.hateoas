@@ -22,9 +22,9 @@ public class Startup
     services.AddLinks(config => 
     {
       config.AddPolicy<MyModel>(policy => {
-          policy.RequiresSelfLink()
-                .RequiresRoutedLink("all", "GetAllModelsRoute")
-                .RequiresRoutedLink("delete", "DeleteModelRoute", x => new { id = x.Id });
+          policy.RequireSelfLink()
+                .RequireRoutedLink("all", "GetAllModelsRoute")
+                .RequireRoutedLink("delete", "DeleteModelRoute", x => new { id = x.Id });
       });
     });
   }
@@ -103,15 +103,15 @@ public class Startup
     services.AddLinks(config => 
     {
       config.AddPolicy<MyModel>(policy => {
-          policy.RequiresRoutedLink("self","GetModelRoute", x => new {id = x.Id })
+          policy.RequireRoutedLink("self","GetModelRoute", x => new {id = x.Id })
       });
       
       config.AddPolicy<MyModel>("FullInfo",policy => {
-          policy.RequiresSelfLink()
-                .RequiresRoutedLink("all", "GetAllModelsRoute")
-                .RequiresRoutedLink("parentModels", "GetParentModelRoute", x => new { parentId = x.ParentId });
-                .RequiresRoutedLink("subModels", "GetSubModelsRoute", x => new { id = x.Id });
-                .RequiresRoutedLink("delete", "DeleteModelRoute", x => new { id = x.Id });
+          policy.RequireSelfLink()
+                .RequireRoutedLink("all", "GetAllModelsRoute")
+                .RequireRoutedLink("parentModels", "GetParentModelRoute", x => new { parentId = x.ParentId });
+                .RequireRoutedLink("subModels", "GetSubModelsRoute", x => new { id = x.Id });
+                .RequireRoutedLink("delete", "DeleteModelRoute", x => new { id = x.Id });
       });
     });
   }
@@ -152,7 +152,7 @@ Another way to achieve the same thing is to mark the actual object with the `Lin
 
 ```csharp
 [Links(Policy="FullInfo")]
-public class MyModel : LinksContainer
+public class MyModel : LinkContainer 
 { }
 
 [Route("api/[controller]")]
@@ -228,13 +228,13 @@ public class Startup
     services.AddLinks(config => 
     {      
       config.AddPolicy<MyModel>("FullInfo",policy => {
-          policy.RequiresSelfLink()
-                .RequiresRoutedLink("all", "GetAllModelsRoute")
-                .RequiresRoutedLink("parentModels", "GetParentModelRoute", 
+          policy.RequireSelfLink()
+                .RequireRoutedLink("all", "GetAllModelsRoute")
+                .RequireRoutedLink("parentModels", "GetParentModelRoute", 
                                       x => new { parentId = x.ParentId }, condition => condition.AuthorizeRoute());
-                .RequiresRoutedLink("subModels", "GetSubModelsRoute", 
+                .RequireRoutedLink("subModels", "GetSubModelsRoute", 
                                       x => new { id = x.Id }, condition => condition.AuthorizeRoute());
-                .RequiresRoutedLink("delete", "DeleteModelRoute", 
+                .RequireRoutedLink("delete", "DeleteModelRoute", 
                                       x => new { id = x.Id }, condition => condition.AuthorizeRoute());
       });
     });
@@ -251,14 +251,14 @@ You can also conditionally show a link based on any boolean logic by using the `
 ```csharp
 options.AddPolicy<IPageLinkContainer>(policy =>
 {
-    policy.RequireSelfLink("all")
-            .RequiresPagingLinks(condition => condition.Assert(x => x.PageCount > 1 ));
+    policy.RequireelfLink("all")
+            .RequirePagingLinks(condition => condition.Assert(x => x.PageCount > 1 ));
 });
 ```
 
 ### Further customization
 
-You are free to add your own requirements using the generic `Requires` method on `ILinkPolicyBuilder`. In addition, you must write an implementation of `ILinksHandler` to handle your requirement. For example, you may have a requirement on certain responses to provide a link back to your api root document. Define a simple requirement for this link.
+You are free to add your own requirements using the generic `Requires` method on `LinksPolicyBuilder`. In addition, you must write an implementation of `ILinksHandler` to handle your requirement. For example, you may have a requirement on certain responses to provide a link back to your api root document. Define a simple requirement for this link.
 
 ```csharp
 using RiskFirst.Hateoas;
@@ -299,7 +299,7 @@ public class Startup
     {
       config.AddPolicy<MyModel>(policy => 
       {
-          policy.RequiresRoutedLink("self","GetModelRoute", x => new {id = x.Id })
+          policy.RequireRoutedLink("self","GetModelRoute", x => new {id = x.Id })
                 .Requires<ApiRootLinkRequirement>();
       });
     });
