@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
+using RiskFirst.Hateoas.Polyfills;
 
 namespace RiskFirst.Hateoas
 {
@@ -18,19 +19,17 @@ namespace RiskFirst.Hateoas
         private readonly IActionContextAccessor contextAccessor;
         private readonly ILogger<DefaultRouteMap> logger;
         private IDictionary<string, RouteInfo> RouteMap { get; } = new Dictionary<string, RouteInfo>();
-        public DefaultRouteMap(IActionContextAccessor contextAccessor, ILogger<DefaultRouteMap> logger)
+        public DefaultRouteMap(IActionContextAccessor contextAccessor, ILogger<DefaultRouteMap> logger, IAssemblyLoader assemblyLoader)
         {
+            if (assemblyLoader == null)
+            {
+                throw new ArgumentNullException(nameof(assemblyLoader));
+            }
+
             this.contextAccessor = contextAccessor;
             this.logger = logger;
 
-            var thisAssembly = typeof(DefaultRouteMap).GetTypeInfo().Assembly.GetName().Name;
-            var libraries =
-                DependencyContext.Default
-                                 .CompileLibraries
-                                 .Where(l => l.Dependencies.Any(d => d.Name.Equals(thisAssembly)));
-
-            var names = libraries.Select(l => l.Name).Distinct();
-            var assemblies = names.Select(a => Assembly.Load(new AssemblyName(a)));
+            var assemblies = assemblyLoader.GetAssemblies();
 
             foreach (var asm in assemblies)
             {

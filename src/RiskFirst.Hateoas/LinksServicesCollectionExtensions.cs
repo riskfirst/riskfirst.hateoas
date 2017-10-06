@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
+using RiskFirst.Hateoas.Polyfills;
 
 namespace RiskFirst.Hateoas
 {
@@ -13,6 +14,7 @@ namespace RiskFirst.Hateoas
             if (services == null)
                 throw new ArgumentNullException(nameof(services));
 
+            services.TryAddSingleton<IAssemblyLoader, DefaultAssemblyLoader>();
             services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
             //services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.TryAdd(ServiceDescriptor.Transient<IRouteMap, DefaultRouteMap>());
