@@ -37,7 +37,7 @@ namespace RiskFirst.Hateoas
             }
             if (context.AuthorizationRequirements.Any())
             {
-                if (!await authService.AuthorizeAsync(context.User, context.Resource, context.AuthorizationRequirements))
+                if (!(await authService.AuthorizeAsync(context.User, context.Resource, context.AuthorizationRequirements)).Succeeded)
                 {
                     return false;
                 }
@@ -47,7 +47,7 @@ namespace RiskFirst.Hateoas
                 var tasks = context.AuthorizationPolicyNames.Select(policyName => authService.AuthorizeAsync(context.User, context.Resource, policyName)).ToList();
                 await Task.WhenAll(tasks);
                
-                if(!tasks.All(x => x.Result))
+                if(!tasks.All(x => x.Result.Succeeded))
                 {
                     return false;
                 }
@@ -67,7 +67,7 @@ namespace RiskFirst.Hateoas
                     return false;
                 }
             }
-            if (!String.IsNullOrEmpty(authData.Policy) && !await authService.AuthorizeAsync(user, values, authData.Policy))
+            if (!String.IsNullOrEmpty(authData.Policy) && !(await authService.AuthorizeAsync(user, values, authData.Policy)).Succeeded)
             {
                 return false;
             }
