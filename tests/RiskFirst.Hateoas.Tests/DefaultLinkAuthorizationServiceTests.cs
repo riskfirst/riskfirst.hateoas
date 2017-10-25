@@ -121,7 +121,7 @@ namespace RiskFirst.Hateoas.Tests
                 .WithMockAuthorizationService(authSvc =>
                 {
                     authSvc.Setup(x => x.AuthorizeAsync(It.IsAny<ClaimsPrincipal>(), It.IsAny<RouteValueDictionary>(), "Policy1"))
-                                .Returns(Task.FromResult(false));
+                                .Returns(Task.FromResult(AuthorizationResult.Failed()));
                 })
                 .WithMockRouteMap(routeMap =>
                 {
@@ -153,7 +153,7 @@ namespace RiskFirst.Hateoas.Tests
                 .WithMockAuthorizationService(authSvc =>
                 {
                     authSvc.Setup(x => x.AuthorizeAsync(It.IsAny<ClaimsPrincipal>(), It.IsAny<RouteValueDictionary>(), "Policy1"))
-                                .Returns(Task.FromResult(true));
+                                .Returns(Task.FromResult(AuthorizationResult.Success()));
                 })
                 .WithMockRouteMap(routeMap =>
                 {
@@ -185,7 +185,7 @@ namespace RiskFirst.Hateoas.Tests
                 .WithMockAuthorizationService(authSvc =>
                 {
                     authSvc.Setup(x => x.AuthorizeAsync(It.IsAny<ClaimsPrincipal>(), It.IsAny<TestLinkContainer>(), It.IsAny<IEnumerable<IAuthorizationRequirement>>()))
-                                .Returns(Task.FromResult(false));
+                                .Returns(Task.FromResult(AuthorizationResult.Failed()));
                 })
                 .WithMockRouteMap(routeMap =>
                 {
@@ -215,7 +215,7 @@ namespace RiskFirst.Hateoas.Tests
                 .WithMockAuthorizationService(authSvc =>
                 {
                     authSvc.Setup(x => x.AuthorizeAsync(It.IsAny<ClaimsPrincipal>(), It.IsAny<TestLinkContainer>(), It.IsAny<IEnumerable<IAuthorizationRequirement>>()))
-                                .Returns(Task.FromResult(true));
+                                .Returns(Task.FromResult(AuthorizationResult.Success()));
                 })
                 .WithMockRouteMap(routeMap =>
                 {
@@ -245,7 +245,7 @@ namespace RiskFirst.Hateoas.Tests
                 .WithMockAuthorizationService(authSvc =>
                 {
                     authSvc.Setup(x => x.AuthorizeAsync(It.IsAny<ClaimsPrincipal>(), It.IsAny<TestLinkContainer>(), It.IsAny<string>()))
-                                .Returns(Task.FromResult(false));
+                                .Returns(Task.FromResult(AuthorizationResult.Failed()));
                 })
                 .WithMockRouteMap(routeMap =>
                 {
@@ -275,7 +275,7 @@ namespace RiskFirst.Hateoas.Tests
                 .WithMockAuthorizationService(authSvc =>
                 {
                     authSvc.Setup(x => x.AuthorizeAsync(It.IsAny<ClaimsPrincipal>(), It.IsAny<TestLinkContainer>(), It.IsAny<string>()))
-                                .Returns(Task.FromResult(true));
+                                .Returns(Task.FromResult(AuthorizationResult.Success()));
                 })
                 .WithMockRouteMap(routeMap =>
                 {

@@ -130,7 +130,7 @@ namespace RiskFirst.Hateoas.Tests
         [AutonamedTheory]
         [Trait("Requirement", "RoutedLink")]
         [Trait("PolicySelection", "DefaultType")]
-        [MemberData("CreateRoutedLinkTestData")]
+        [MemberData(nameof(CreateRoutedLinkTestData))]
         public async Task GivenValidRoute_AddsLinkToModel(int? id, RoutedLinkExpectation expectation)
         {
             // Arrange
@@ -162,7 +162,7 @@ namespace RiskFirst.Hateoas.Tests
         }
 
         [AutonamedTheory]
-        [MemberData("CreateRoutedLinkTestData")]
+        [MemberData(nameof(CreateRoutedLinkTestData))]
         [Trait("Requirement", "RoutedLink")]
         [Trait("PolicySelection", "DefaultType")]
         public async Task GivenValidRouteWithAssertion_AddsLinkToModel(int? id, RoutedLinkExpectation expectation)
@@ -197,7 +197,7 @@ namespace RiskFirst.Hateoas.Tests
         }
 
         [AutonamedTheory]
-        [MemberData("CreateRoutedLinkTestData")]
+        [MemberData(nameof(CreateRoutedLinkTestData))]
         [Trait("Requirement", "RoutedLink")]
         [Trait("PolicySelection", "DefaultType")]
         public async Task GivenValidRouteWithNegativeAssertion_DoesNotAddLinkToModel(int? id, RoutedLinkExpectation expectation)
@@ -230,7 +230,7 @@ namespace RiskFirst.Hateoas.Tests
         }
 
         [AutonamedTheory]
-        [MemberData("CreateRoutedLinkTestData")]
+        [MemberData(nameof(CreateRoutedLinkTestData))]
         [Trait("Requirement", "RoutedLink")]
         [Trait("PolicySelection", "DefaultType")]
         public async Task GivenValidAndInvalidRoutes_AddsLinkToModelAndSkipsInvalidLink(int? id, RoutedLinkExpectation expectation)
@@ -269,7 +269,7 @@ namespace RiskFirst.Hateoas.Tests
         }
 
         [AutonamedTheory]
-        [MemberData("CreateRoutedLinkTestData")]
+        [MemberData(nameof(CreateRoutedLinkTestData))]
         [Trait("Requirement", "RoutedLink")]
         [Trait("PolicySelection", "DefaultType")]
         public async Task GivenValidRouteRequireingAuth_AddsLinkToModel_WhenGranted(int? id, RoutedLinkExpectation expectation)
@@ -306,7 +306,7 @@ namespace RiskFirst.Hateoas.Tests
         }
 
         [AutonamedTheory]
-        [MemberData("CreateRoutedLinkTestData")]
+        [MemberData(nameof(CreateRoutedLinkTestData))]
         [Trait("Requirement", "RoutedLink")]
         [Trait("PolicySelection", "DefaultType")]
         public async Task GivenValidRouteRequireingAuth_DoesNotAddLinkToModel_WhenDenied(int? id, RoutedLinkExpectation expectation)
@@ -342,7 +342,7 @@ namespace RiskFirst.Hateoas.Tests
         }
 
         [AutonamedTheory()]
-        [MemberData("CreateRoutedLinkTestData")]
+        [MemberData(nameof(CreateRoutedLinkTestData))]
         [Trait("Requirement", "RoutedLink")]
         [Trait("PolicySelection", "MethodOverride")]
         public async Task GivenValidRouteWithRouteOverride_AddsLinkToModel(int? id, RoutedLinkExpectation expectation)
@@ -385,7 +385,7 @@ namespace RiskFirst.Hateoas.Tests
         }
 
         [AutonamedTheory()]
-        [MemberData("CreateRoutedLinkTestData")]
+        [MemberData(nameof(CreateRoutedLinkTestData))]
         [Trait("Requirement", "RoutedLink")]
         [Trait("PolicySelection", "MethodOverride")]
         public async Task GivenValidRouteWithEmptyRouteOverride_AddsLinkToModel(int? id, RoutedLinkExpectation expectation)
@@ -487,7 +487,7 @@ namespace RiskFirst.Hateoas.Tests
         }
 
         [AutonamedTheory()]
-        [MemberData("CreateRoutedLinkTestData")]
+        [MemberData(nameof(CreateRoutedLinkTestData))]
         [Trait("Requirement", "RoutedLink")]
         [Trait("PolicySelection", "TypeOverride")]
         public async Task GivenValidRouteWithTypeOverride_AddsLinkToModel(int? id, RoutedLinkExpectation expectation)
@@ -526,7 +526,7 @@ namespace RiskFirst.Hateoas.Tests
         }
 
         [AutonamedTheory()]
-        [MemberData("CreateRoutedLinkTestData")]
+        [MemberData(nameof(CreateRoutedLinkTestData))]
         [Trait("Requirement", "RoutedLink")]
         [Trait("PolicySelection", "TypeOverride")]
         public async Task GivenValidRouteWithEmptyTypeOverride_AddsLinkToModel(int? id, RoutedLinkExpectation expectation)
@@ -616,7 +616,7 @@ namespace RiskFirst.Hateoas.Tests
         }
 
         [AutonamedTheory()]
-        [MemberData("CreateRoutedLinkTestData")]
+        [MemberData(nameof(CreateRoutedLinkTestData))]
         [Trait("Requirement", "RoutedLink")]
         [Trait("PolicySelection", "NamedOverride")]
         public async Task GivenValidRouteWithNamedOverride_AddsLinkToModel(int? id, RoutedLinkExpectation expectation)
@@ -699,7 +699,7 @@ namespace RiskFirst.Hateoas.Tests
 
         #region PagedLinks Tests
         [AutonamedTheory]
-        [MemberData("CreatePagedLinkTestData")]
+        [MemberData(nameof(CreatePagedLinkTestData))]
         [Trait("Requirement", "PagedLink")]
         [Trait("PolicySelection", "DefaultType")]
         public async Task GivenMultiplePages_AddsCorrectLinksToModel(int pageSize, int pageCount, int pageNumber, IEnumerable<PagedLinkExpectation> linkExpectations)
@@ -748,7 +748,7 @@ namespace RiskFirst.Hateoas.Tests
 
         [AutonamedTheory]
         [Trait("Requirement", "PagedLink")]
-        [MemberData("CreatePagedLinkTestData")]
+        [MemberData(nameof(CreatePagedLinkTestData))]
         [Trait("PolicySelection", "DefaultType")]
         public async Task GivenMultiplePagesWithAssertion_AddsCorrectLinksToModel(int pageSize, int pageCount, int pageNumber, IEnumerable<PagedLinkExpectation> linkExpectations)
         {
@@ -796,7 +796,7 @@ namespace RiskFirst.Hateoas.Tests
 
         [AutonamedTheory]
         [Trait("Requirement", "PagedLink")]
-        [MemberData("CreatePagedLinkTestData")]
+        [MemberData(nameof(CreatePagedLinkTestData))]
         [Trait("PolicySelection", "DefaultType")]
         public async Task GivenMultiplePagesWithNegativeAssertion_DoesNotAddLinksToModel(int pageSize, int pageCount, int pageNumber, IEnumerable<PagedLinkExpectation> linkExpectations)
         {
@@ -833,7 +833,7 @@ namespace RiskFirst.Hateoas.Tests
 
         [AutonamedTheory]
         [Trait("Requirement", "PagedLink")]
-        [MemberData("CreatePagedLinkTestData")]
+        [MemberData(nameof(CreatePagedLinkTestData))]
         [Trait("PolicySelection", "DefaultType")]
         public async Task GivenMultiplePagesRequireingAuth_AddsLinksToModel_WhenGranted(int pageSize, int pageCount, int pageNumber, IEnumerable<PagedLinkExpectation> linkExpectations)
         {
@@ -883,7 +883,7 @@ namespace RiskFirst.Hateoas.Tests
 
         [AutonamedTheory]
         [Trait("Requirement", "PagedLink")]
-        [MemberData("CreatePagedLinkTestData")]
+        [MemberData(nameof(CreatePagedLinkTestData))]
         [Trait("PolicySelection", "DefaultType")]
         public async Task GivenMultiplePagesRequireingAuth_DoesNotAddLinksToModel_WhenDenied(int pageSize, int pageCount, int pageNumber, IEnumerable<PagedLinkExpectation> linkExpectations)
         {
@@ -920,7 +920,7 @@ namespace RiskFirst.Hateoas.Tests
             contextMock.Verify(x => x.Skipped(It.IsAny<PagingLinksRequirement<TestPagedLinkContainer>>(),LinkRequirementSkipReason.Authorization,null), Times.Once());
         }
 
-        internal static IEnumerable<object[]> CreatePagedLinkTestData()
+        public static IEnumerable<object[]> CreatePagedLinkTestData()
         {
             // Test case 1: first page of multiple pages
             yield return new object[] { 50, 3, 1,
@@ -1093,7 +1093,7 @@ namespace RiskFirst.Hateoas.Tests
         }
 
         [AutonamedTheory()]
-        [MemberData("CreateRoutedLinkTestData")]
+        [MemberData(nameof(CreateRoutedLinkTestData))]
         [Trait("Requirement", "RoutedLink")]
         [Trait("PolicySelection", "DefaultType")]
         public async Task WhenCombiningWithBaseType_AddsCorrectLinksToModel(int? id, RoutedLinkExpectation expectation)
@@ -1136,7 +1136,7 @@ namespace RiskFirst.Hateoas.Tests
         }
 
         [AutonamedTheory]
-        [MemberData("CreatePagedLinkTestData")]
+        [MemberData(nameof(CreatePagedLinkTestData))]
         [Trait("Requirement", "PagedLink")]
         [Trait("PolicySelection", "DefaultType")]
         public async Task WhenCombiningWithInterfaceType_AddsCorrectLinksToModel(int pageSize, int pageCount, int pageNumber, IEnumerable<PagedLinkExpectation> linkExpectations)
