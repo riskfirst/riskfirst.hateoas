@@ -12,6 +12,8 @@ Install the package from [Nuget.org](https://www.nuget.org/packages/riskfirst.ha
 PM> Install-Package RiskFirst.Hateoas
 ```
 
+This will include the dependency RiskFirst.Hateoas.Models which was introduced in version 3.0.0 to remove the AspNetCore dependencies from assemblies referencing the LinkContainer base classes.
+
 Configure the links to include for each of your models.
 
 ```csharp

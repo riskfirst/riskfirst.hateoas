@@ -9,24 +9,27 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/riskfirst/riskfirst.hateoas</PackageProjectUrl>
-    <Authors>Jamie Cohen</Authors>
+    <Authors>RiskFirst</Authors>
     <PackageLicenseUrl>https://github.com/riskfirst/riskfirst.hateoas/blob/master/LICENSE</PackageLicenseUrl>
     <Description>An implementation of HATEOAS for aspnet core web api projects which gives full control of which links to apply to models returned from your api.</Description>
     <RepositoryUrl>https://github.com/riskfirst/riskfirst.hateoas</RepositoryUrl>
     <RepositoryType>GIT</RepositoryType>
     <PackageTags>HATEOAS aspnet dotnetcore</PackageTags>
-    <PackageReleaseNotes>v0.0.1 - Initial release
-v1.0.0 - First stable release
-v1.0.1 - Bug fixes to 1.0.0
-v1.1.0 - Refactored a lot of the library to simplify the use of generics, enabling implementation of ability to Combine policies.
-v1.1.1 - Support for .NET Framework 4.5.1
-v1.1.2 - Changed dependent assembly loading procedure for Controllers.
-v1.1.3 - Implemented interface to allow control assembly loading
-v2.0.0 - Upgrade framework and dependencies to netstandard2/net461</PackageReleaseNotes>
-    <Version>2.0.0</Version>
+    <PackageReleaseNotes>
+        v0.0.1 - Initial release
+        v1.0.0 - First stable release
+        v1.0.1 - Bug fixes to 1.0.0
+        v1.1.0 - Refactored a lot of the library to simplify the use of generics, enabling implementation of ability to Combine policies.
+        v1.1.1 - Support for .NET Framework 4.5.1
+        v1.1.2 - Changed dependent assembly loading procedure for Controllers.
+        v1.1.3 - Implemented interface to allow control assembly loading
+        v2.0.0 - Upgrade framework and dependencies to netstandard2/net461
+        v3.0.0 - extract models to separate assembly
+    </PackageReleaseNotes>
+    <Version>3.0.0</Version>
     <PackageIconUrl>https://raw.githubusercontent.com/riskfirst/pkgicons/master/riskfirst-pkg.png</PackageIconUrl>
-    <AssemblyVersion>2.0.0.0</AssemblyVersion>
-    <FileVersion>2.0.0.0</FileVersion>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <FileVersion>3.0.0.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -35,6 +38,10 @@ v2.0.0 - Upgrade framework and dependencies to netstandard2/net461</PackageRelea
     <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Routing.Abstractions" Version="2.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RiskFirst.Hateoas.Models\RiskFirst.Hateoas.Models.csproj" />
   </ItemGroup>
 
 </Project>
