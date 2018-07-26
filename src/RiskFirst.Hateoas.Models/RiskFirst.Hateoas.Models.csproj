@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
+        <AssemblyName>RiskFirst.Hateoas.Models</AssemblyName>
+        <PackageId>RiskFirst.Hateoas.Models</PackageId>
+        <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+        <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+        <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+        <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+        <PackageProjectUrl>https://github.com/riskfirst/riskfirst.hateoas</PackageProjectUrl>
+        <Authors>RiskFirst</Authors>
+        <PackageLicenseUrl>https://github.com/riskfirst/riskfirst.hateoas/blob/master/LICENSE</PackageLicenseUrl>
+        <Description>Model classes for RiskFirst.Hateoas</Description>
+        <RepositoryUrl>https://github.com/riskfirst/riskfirst.hateoas</RepositoryUrl>
+        <RepositoryType>GIT</RepositoryType>
+        <PackageTags>HATEOAS aspnet dotnetcore</PackageTags>
+        <PackageReleaseNotes>
+            v3.0.0 - extract models to separate assembly
+        </PackageReleaseNotes>
+        <Version>3.0.0</Version>
+        <PackageIconUrl>https://raw.githubusercontent.com/riskfirst/pkgicons/master/riskfirst-pkg.png</PackageIconUrl>
+        <AssemblyVersion>3.0.0.0</AssemblyVersion>
+        <FileVersion>3.0.0.0</FileVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="newtonsoft.json" Version="10.0.3" />
+    </ItemGroup>
+
+</Project>
