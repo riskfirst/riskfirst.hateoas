@@ -34,7 +34,7 @@ namespace RiskFirst.Hateoas
             foreach (var asm in assemblies)
             {
                 var controllers = asm.GetTypes()
-                    .Where(type => typeof(Controller).IsAssignableFrom(type));
+                    .Where(type => typeof(ControllerBase).IsAssignableFrom(type));
 
                 var controllerMethods = controllers.SelectMany(c => c.GetMethods(BindingFlags.Public | BindingFlags.Instance)
                                                                      .Where(m => m.IsDefined(typeof(HttpMethodAttribute)))

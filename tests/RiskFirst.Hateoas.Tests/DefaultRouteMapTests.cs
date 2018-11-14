@@ -18,7 +18,19 @@ namespace RiskFirst.Hateoas.Tests
             var loggerMock = new Mock<ILogger<DefaultRouteMap>>();
 
             var routeMap = new DefaultRouteMap(contextAccessorMock.Object, loggerMock.Object, new DefaultAssemblyLoader());
-            var route = routeMap.GetRoute(ValuesController.GetAllValuesRoute);
+            var route = routeMap.GetRoute(MvcController.GetAllValuesRoute);
+            Assert.NotNull(route);
+        }
+
+
+        [AutonamedFact]
+        public void GivenAssemblyLoaderProvidesApiControllerAssemblies_RoutesAreRegistered()
+        {
+            var contextAccessorMock = new Mock<IActionContextAccessor>();
+            var loggerMock = new Mock<ILogger<DefaultRouteMap>>();
+
+            var routeMap = new DefaultRouteMap(contextAccessorMock.Object, loggerMock.Object, new DefaultAssemblyLoader());
+            var route = routeMap.GetRoute(ApiController.GetAllValuesRoute);
             Assert.NotNull(route);
         }
     }
