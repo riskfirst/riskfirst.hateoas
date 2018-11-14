@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using RiskFirst.Hateoas.Models;
 using RiskFirst.Hateoas.Tests.Controllers.Models;
+using System.Threading.Tasks;
 
 namespace RiskFirst.Hateoas.Tests.Controllers
 {
-    [Controller]
+    [ApiController]
     public class ApiController : ControllerBase
     {
         public const string GetAllValuesRoute = "GetAllValuesApiRoute";
