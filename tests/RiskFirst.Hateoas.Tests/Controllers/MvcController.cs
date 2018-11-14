@@ -6,7 +6,7 @@ using RiskFirst.Hateoas.Tests.Controllers.Models;
 namespace RiskFirst.Hateoas.Tests.Controllers
 {
     [Route("api/[controller]")]
-    public class ValuesController : Controller
+    public class MvcController : Controller
     {
         public const string GetAllValuesRoute = "GetAllValuesRoute";
 

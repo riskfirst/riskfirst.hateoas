@@ -25,7 +25,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="newtonsoft.json" Version="10.0.3" />
+      <PackageReference Include="newtonsoft.json" Version="11.0.2" />
     </ItemGroup>
 
 </Project>
