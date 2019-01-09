@@ -18,7 +18,7 @@ namespace RiskFirst.Hateoas
         {
             this.actionAccessor = actionAccessor;
             this.loggerFactory = loggerFactory;
-            generator = generator;
+            this.generator = generator;
         }
         public LinkTransformationContext CreateContext(ILinkSpec spec)
         {
