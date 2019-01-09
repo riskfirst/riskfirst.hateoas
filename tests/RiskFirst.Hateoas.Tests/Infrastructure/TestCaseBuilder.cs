@@ -157,10 +157,10 @@ namespace RiskFirst.Hateoas.Tests.Infrastructure
             var authServiceMock = new Mock<ILinkAuthorizationService>();
             var serviceLoggerMock = new Mock<ILogger<DefaultLinksService>>();
             var actionContext = CreateActionContext();
-          
+            var linkGenerator = new Mock<LinkGenerator>();
             var optionsWrapper = Options.Create(options);
             var policyProvider = new DefaultLinksPolicyProvider(optionsWrapper);
-            var transformationContextFactory = new TestLinkTransformationContextFactory(actionContext);
+            var transformationContextFactory = new TestLinkTransformationContextFactory(actionContext, linkGenerator.Object);
             var linksHandlerFactory = new TestLinksHandlerContextFactory(routeMap, authServiceMock.Object, actionContext);
             var evaluator = new DefaultLinksEvaluator(optionsWrapper, transformationContextFactory);
 
@@ -171,9 +171,9 @@ namespace RiskFirst.Hateoas.Tests.Infrastructure
         public LinksEvaluatorTestCase BuildLinksEvaluatorTestCase()
         {
             var actionContext = CreateActionContext();
-
+            var linkGenerator = new Mock<LinkGenerator>();
             var optionsWrapper = Options.Create(options);
-            var transformationContextFactory = new TestLinkTransformationContextFactory(actionContext);
+            var transformationContextFactory = new TestLinkTransformationContextFactory(actionContext, linkGenerator.Object);
             var evaluator = new DefaultLinksEvaluator(optionsWrapper, transformationContextFactory);
 
             return new LinksEvaluatorTestCase(evaluator, this.hrefTransformationMock, this.relTransformationMock);
@@ -206,15 +206,17 @@ namespace RiskFirst.Hateoas.Tests.Infrastructure
         private class TestLinkTransformationContextFactory : ILinkTransformationContextFactory
         {
             private readonly ActionContext actionContext;
+            private readonly LinkGenerator generator;
 
-            public TestLinkTransformationContextFactory(ActionContext actionContext)
+            public TestLinkTransformationContextFactory(ActionContext actionContext, LinkGenerator generator)
             {
                 this.actionContext = actionContext;
+                this.generator = generator;
             }
 
             public LinkTransformationContext CreateContext(ILinkSpec spec)
             {
-                return new LinkTransformationContext(spec, actionContext);
+                return new LinkTransformationContext(spec, actionContext, generator);
             }
         }
     }
