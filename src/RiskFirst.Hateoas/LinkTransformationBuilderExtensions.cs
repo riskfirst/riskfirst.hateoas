@@ -25,12 +25,12 @@ namespace RiskFirst.Hateoas
                 if (string.IsNullOrEmpty(ctx.LinkSpec.RouteName))
                     throw new InvalidOperationException($"Invalid route specified in link specification.");
 
-                var valuesDictionary = GetValuesDictionary(ctx.LinkSpec.RouteValues);
-                var virtualPathContext = new VirtualPathContext(ctx.HttpContext, ctx.RouteValues, valuesDictionary, ctx.LinkSpec.RouteName);
-                var virtualPathData = ctx.Router.GetVirtualPath(virtualPathContext);
-                if (virtualPathData == null)
-                    throw new InvalidOperationException($"Invalid virtualPathData when adding route '{ctx.LinkSpec.RouteName}'. RouteValues: {String.Join(",", valuesDictionary.Select(x => String.Concat(x.Key,"=",x.Value)))}");
-                return virtualPathData.VirtualPath;
+                var path = ctx.LinkGenerator.GetPathByRouteValues(ctx.HttpContext, ctx.LinkSpec.RouteName, ctx.LinkSpec.RouteValues);
+
+                if (string.IsNullOrEmpty(path))
+                    throw new InvalidOperationException($"Invalid path when adding route '{ctx.LinkSpec.RouteName}'. RouteValues: {string.Join(",", ctx.ActionContext.RouteData.Values.Select(x => string.Concat(x.Key, "=", x.Value)))}");
+
+                return path;
             });
         }
         public static LinkTransformationBuilder AddVirtualPath(this LinkTransformationBuilder builder,string path)
