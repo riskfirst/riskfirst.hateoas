@@ -10,16 +10,16 @@ namespace RiskFirst.Hateoas
 {
     public class LinkTransformationContext
     {
-        public LinkTransformationContext(ILinkSpec spec, ActionContext actionContext)
+        public LinkTransformationContext(ILinkSpec spec, ActionContext actionContext, LinkGenerator linkGenerator)
         {
             this.LinkSpec = spec;
             this.ActionContext = actionContext;
+            this.LinkGenerator = linkGenerator;
         }
         public virtual ILinkSpec LinkSpec { get; }
         public ActionContext ActionContext { get; }
         public HttpContext HttpContext => ActionContext.HttpContext;
         public RouteValueDictionary RouteValues => ActionContext.RouteData.Values;
-        public IRouter Router => ActionContext.RouteData.Routers[0];
-        
+        public LinkGenerator LinkGenerator {get;}
     }
 }
