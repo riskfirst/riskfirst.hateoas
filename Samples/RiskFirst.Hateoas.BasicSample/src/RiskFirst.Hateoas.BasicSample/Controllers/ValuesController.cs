@@ -37,6 +37,7 @@ namespace RiskFirst.Hateoas.BasicSample.Controllers
 
         // GET api/values/5
         [HttpGet("{id}", Name = "GetValueByIdRoute")]
+        [HttpGet("v2/{id}", Name = "GetValueByIdRouteV2")]
         [Links(Policy = "FullInfoPolicy")]
         public async Task<ValueInfo> Get(int id)
         {

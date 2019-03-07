@@ -67,7 +67,9 @@ namespace RiskFirst.Hateoas
             var action = this.contextAccessor?.ActionContext?.ActionDescriptor as ControllerActionDescriptor;
             if (action == null)
                 throw new InvalidOperationException($"Invalid action descriptor in route map");
-            var attr = action.MethodInfo.GetCustomAttribute<HttpMethodAttribute>();
+            var attr = action.EndpointMetadata.OfType<HttpMethodAttribute>().FirstOrDefault();
+            if (attr == null)
+                throw new InvalidOperationException($"Unable to get HttpMethodAttribute in route map");
             var method = ParseMethod(attr.HttpMethods);
             return new RouteInfo(attr.Name, method, new ReflectionControllerMethodInfo(action.MethodInfo));
         }

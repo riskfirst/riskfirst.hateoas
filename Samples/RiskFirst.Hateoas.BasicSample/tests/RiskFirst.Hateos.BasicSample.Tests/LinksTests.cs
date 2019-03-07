@@ -33,6 +33,32 @@ namespace RiskFirst.Hateos.BasicSample.Tests
 
             Assert.All(values.Items, i => Assert.True(i.Links.Count>0,"Invalid number of links"));
         }
+
+        [Fact]
+        public async Task GetValue_ReturnsObjectsWithLinks()
+        {
+            // Act
+            var response = await client.GetAsync("/api/values/1");
+            response.EnsureSuccessStatusCode();
+
+            var responseString = await response.Content.ReadAsStringAsync();
+            var value = JsonConvert.DeserializeObject<ValueInfo>(responseString);
+
+            Assert.True(value.Links.Count > 0, "Invalid number of links");
+        }
+
+        [Fact]
+        public async Task GetValue_AlternateRoute_ReturnsObjectsWithLinks()
+        {
+            // Act
+            var response = await client.GetAsync("/api/values/v2/1");
+            response.EnsureSuccessStatusCode();
+
+            var responseString = await response.Content.ReadAsStringAsync();
+            var value = JsonConvert.DeserializeObject<ValueInfo>(responseString);
+
+            Assert.True(value.Links.Count > 0, "Invalid number of links");
+        }
     }
 
     public class ValuesContainer
