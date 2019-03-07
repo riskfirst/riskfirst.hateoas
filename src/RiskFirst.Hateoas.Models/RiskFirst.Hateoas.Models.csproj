@@ -18,11 +18,12 @@
         <PackageReleaseNotes>
             v3.0.0 - extract models to separate assembly
         
-            v3.1.0 - version bump to match main assembly</PackageReleaseNotes>
-        <Version>3.1.0</Version>
+            v3.1.0 - version bump to match main assembly    
+            v3.1.1 - version bump to match main assembly</PackageReleaseNotes>
+        <Version>3.1.1</Version>
         <PackageIconUrl>https://raw.githubusercontent.com/riskfirst/pkgicons/master/riskfirst-pkg.png</PackageIconUrl>
-        <AssemblyVersion>3.0.0.0</AssemblyVersion>
-        <FileVersion>3.1.0.0</FileVersion>
+        <AssemblyVersion>3.1.1.0</AssemblyVersion>
+        <FileVersion>3.1.1.0</FileVersion>
     </PropertyGroup>
 
     <ItemGroup>
