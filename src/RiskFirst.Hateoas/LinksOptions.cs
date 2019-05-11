@@ -15,6 +15,23 @@ namespace RiskFirst.Hateoas
             AddPolicy("Default", configurePolicy);
         }
 
+        public void AddPolicy<TResource>(ILinksPolicy policy)
+        {
+            AddPolicy<TResource>("Default", policy);
+        }
+
+        public void AddPolicy<TResource>(string name, ILinksPolicy policy)
+        {
+            if (String.IsNullOrEmpty(name))
+                throw new ArgumentException("Policy name cannot be null.", nameof(name));
+
+            if (policy == null)
+                throw new ArgumentNullException(nameof(policy));
+
+            var policyName = ConstructFullPolicyName<TResource>(name);
+            PolicyMap[policyName] = policy;
+        }
+
         public void AddPolicy<TResource>(string name, Action<LinksPolicyBuilder<TResource>> configurePolicy) //where TResource : class
         {
             if (String.IsNullOrEmpty(name))
@@ -24,9 +41,15 @@ namespace RiskFirst.Hateoas
 
             var builder = new LinksPolicyBuilder<TResource>();
             configurePolicy(builder);
-            var policyName = $"{name}:{typeof(TResource).FullName}";
+            var policyName = ConstructFullPolicyName<TResource>(name);
             PolicyMap[policyName] = builder.Build();
         }
+
+        private static string ConstructFullPolicyName<TResource>(string name)
+        {
+            return $"{name}:{typeof(TResource).FullName}";
+        }
+
         public ILinksPolicy GetPolicy<TResource>()
         {
             return GetPolicy<TResource>("Default");
