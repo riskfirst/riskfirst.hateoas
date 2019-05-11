@@ -6,9 +6,12 @@ namespace RiskFirst.Hateoas
 {
     public class LinksOptions
     {
-        private IDictionary<string, ILinksPolicy> PolicyMap { get; } = new Dictionary<string, ILinksPolicy>();
-
+        private ILinkTransformation hrefTransformation = new LinkTransformationBuilder().AddProtocol().AddHost().AddRoutePath().Build();
+        private ILinkTransformation relTransformation = new LinkTransformationBuilder().Add(ctx => $"{ctx.LinkSpec.ControllerName}/{ctx.LinkSpec.RouteName}").Build();
         public ILinksPolicy DefaultPolicy { get; set; } = new LinksPolicyBuilder<ILinkContainer>().RequireSelfLink().Build();
+        public ILinkTransformation HrefTransformation => hrefTransformation;
+        public ILinkTransformation RelTransformation => relTransformation;
+        private IDictionary<string, ILinksPolicy> PolicyMap { get; } = new Dictionary<string, ILinksPolicy>();
 
         public void AddPolicy<TResource>(Action<LinksPolicyBuilder<TResource>> configurePolicy) //where TResource : class
         {
@@ -45,15 +48,25 @@ namespace RiskFirst.Hateoas
             PolicyMap[policyName] = builder.Build();
         }
 
-        private static string ConstructFullPolicyName<TResource>(string name)
+        public void ConfigureHrefTransformation(Action<LinkTransformationBuilder> configureTransform)
         {
-            return $"{name}:{typeof(TResource).FullName}";
+            var builder = new LinkTransformationBuilder();
+            configureTransform(builder);
+            this.hrefTransformation = builder.Build();
+        }
+
+        public void ConfigureRelTransformation(Action<LinkTransformationBuilder> configureTransform)
+        {
+            var builder = new LinkTransformationBuilder();
+            configureTransform(builder);
+            this.relTransformation = builder.Build();
         }
 
         public ILinksPolicy GetPolicy<TResource>()
         {
             return GetPolicy<TResource>("Default");
         }
+
         public ILinksPolicy GetPolicy<TResource>(string name)
         {
             if (String.IsNullOrEmpty(name))
@@ -62,10 +75,6 @@ namespace RiskFirst.Hateoas
             return PolicyMap.ContainsKey(policyName) ? PolicyMap[policyName] as ILinksPolicy/*<TResource>*/ : null;
         }
 
-        private ILinkTransformation hrefTransformation = new LinkTransformationBuilder().AddProtocol().AddHost().AddRoutePath().Build();
-        private ILinkTransformation relTransformation = new LinkTransformationBuilder().Add(ctx => $"{ctx.LinkSpec.ControllerName}/{ctx.LinkSpec.RouteName}").Build();
-        public ILinkTransformation HrefTransformation => hrefTransformation;
-        public ILinkTransformation RelTransformation => relTransformation;
         public void UseHrefTransformation<T>()
             where T : ILinkTransformation, new()
         {
@@ -82,12 +91,6 @@ namespace RiskFirst.Hateoas
         {
             hrefTransformation = new LinkTransformationBuilder().AddRoutePath().Build();
         }
-        public void ConfigureHrefTransformation(Action<LinkTransformationBuilder> configureTransform)
-        {
-            var builder = new LinkTransformationBuilder();
-            configureTransform(builder);
-            this.hrefTransformation = builder.Build();
-        }
 
         public void UseRelTransformation<T>()
             where T : ILinkTransformation, new()
@@ -101,11 +104,9 @@ namespace RiskFirst.Hateoas
             this.relTransformation = transform;
         }
 
-        public void ConfigureRelTransformation(Action<LinkTransformationBuilder> configureTransform)
+        private static string ConstructFullPolicyName<TResource>(string name)
         {
-            var builder = new LinkTransformationBuilder();
-            configureTransform(builder);
-            this.relTransformation = builder.Build();
+            return $"{name}:{typeof(TResource).FullName}";
         }
     }
 }
