@@ -37,15 +37,13 @@ namespace RiskFirst.Hateoas
 
         public void AddPolicy<TResource>(string name, Action<LinksPolicyBuilder<TResource>> configurePolicy) //where TResource : class
         {
-            if (String.IsNullOrEmpty(name))
-                throw new ArgumentException("Policy name cannot be null", nameof(name));
             if (configurePolicy == null)
                 throw new ArgumentNullException(nameof(configurePolicy));
 
             var builder = new LinksPolicyBuilder<TResource>();
             configurePolicy(builder);
-            var policyName = ConstructFullPolicyName<TResource>(name);
-            PolicyMap[policyName] = builder.Build();
+
+            AddPolicy<TResource>(name, builder.Build());
         }
 
         public void ConfigureHrefTransformation(Action<LinkTransformationBuilder> configureTransform)
