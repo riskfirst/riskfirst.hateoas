@@ -107,16 +107,9 @@ namespace RiskFirst.Hateos.BasicSample.Tests
         {
             using (var reader = new StringReader(xml))
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(T));
+                var serializer = new XmlSerializer(typeof(T));
                 return (T)serializer.Deserialize(reader);
             }
-        }
-
-        private static XmlDocument GetDocument(string xml)
-        {
-            var doc = new XmlDocument();
-            doc.Load(xml);
-            return doc;
         }
     }
 }

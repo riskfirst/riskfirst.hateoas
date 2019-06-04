@@ -61,18 +61,18 @@ namespace RiskFirst.Hateoas.Tests
         {
             using (var reader = new StringReader(xml))
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(T));
+                var serializer = new XmlSerializer(typeof(T));
                 return (T)serializer.Deserialize(reader);
             }
         }
 
         private static string SerializeToXml(object obj)
         {
-            XmlSerializer xsSubmit = new XmlSerializer(obj.GetType());
+            var serializer = new XmlSerializer(obj.GetType());
 
             using (var writer = new StringWriter())
             {
-                xsSubmit.Serialize(writer, obj);
+                serializer.Serialize(writer, obj);
                 return writer.ToString();
             }
         }
