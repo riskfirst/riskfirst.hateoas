@@ -69,28 +69,41 @@ public class MyController : Controller
 
 The above code would produce a response as the example below
 
-```javascript
+```json
 {
-   id:1,
-   someOtherField: "foo",
-   _links : {
-    self: {
-      rel: "MyController\GetModelRoute",
-      href: "https://api.example.com/my/1"
-      method: "GET"
+   "id": 1,
+   "someOtherField": "foo",
+   "_links" : {
+    "self": {
+      "rel": "MyController\\GetModelRoute",
+      "href": "https://api.example.com/my/1",
+      "method": "GET"
     },
-    all: {
-      rel: "MyController\GetAllModelsRoute",
-      href: "https://api.example.com/my"
-      method: "GET"
+    "all": {
+      "rel": "MyController\\GetAllModelsRoute",
+      "href": "https://api.example.com/my",
+      "method": "GET"
     },
-    delete: {
-      rel: "MyController\DeleteModelRoute",
-      href: "https://api.example.com/my/1"
-      method: "DELETE"
+    "delete": {
+      "rel": "MyController\\DeleteModelRoute",
+      "href": "https://api.example.com/my/1",
+      "method": "DELETE"
     }
   }
 }
+```
+
+or if you're using XML
+
+```xml
+<?xml version="1.0"?>
+<MyModel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <link href="https://api.example.com/my/1" method="GET" rel="self"/>
+  <link href="https://api.example.com/my" method="GET" rel="all"/>
+  <link href="https://api.example.com/my/1" method="DELETE" rel="delete"/>
+  <Id>1</Id>
+  <SomeOtherField>foo</SomeOtherField>
+</MyModel>
 ```
 
 ### Multiple policies for a model
