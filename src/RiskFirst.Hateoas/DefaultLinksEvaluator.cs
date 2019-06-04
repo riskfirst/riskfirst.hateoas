@@ -14,6 +14,7 @@ namespace RiskFirst.Hateoas
             this.options = options.Value;
             this.contextFactory = contextFactory;
         }
+
         public void BuildLinks(IEnumerable<ILinkSpec> links, ILinkContainer container)
         {
             foreach (var link in links)
@@ -21,8 +22,9 @@ namespace RiskFirst.Hateoas
                 var context = contextFactory.CreateContext(link);
                 try
                 {
-                    container.AddLink(link.Id, new Link()
+                    container.Add(new Link()
                     {
+                        Name = link.Id,
                         Href = options.HrefTransformation?.Transform(context),
                         Rel = options.RelTransformation?.Transform(context),
                         Method = link.HttpMethod.ToString()

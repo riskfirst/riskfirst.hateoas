@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using RiskFirst.Hateoas.BasicSample.Models;
-using RiskFirst.Hateoas.Models;
 using RiskFirst.Hateoas.BasicSample.Repository;
+using RiskFirst.Hateoas.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace RiskFirst.Hateoas.BasicSample.Controllers
 {
@@ -22,6 +20,7 @@ namespace RiskFirst.Hateoas.BasicSample.Controllers
         }
 
         // GET api/values
+        [FormatFilter]
         [HttpGet( Name = "GetAllValuesRoute")]
         public async Task<ItemsLinkContainer<ValueInfo>> Get()
         {
@@ -36,6 +35,7 @@ namespace RiskFirst.Hateoas.BasicSample.Controllers
         }
 
         // GET api/values/5
+        [FormatFilter]
         [HttpGet("{id}", Name = "GetValueByIdRoute")]
         [HttpGet("v2/{id}", Name = "GetValueByIdRouteV2")]
         [Links(Policy = "FullInfoPolicy")]
