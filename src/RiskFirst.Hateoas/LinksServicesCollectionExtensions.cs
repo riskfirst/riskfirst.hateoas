@@ -16,8 +16,7 @@ namespace RiskFirst.Hateoas
 
             services.TryAddSingleton<IAssemblyLoader, DefaultAssemblyLoader>();
             services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
-            //services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.TryAdd(ServiceDescriptor.Transient<IRouteMap, DefaultRouteMap>());
+            services.TryAdd(ServiceDescriptor.Singleton<IRouteMap, DefaultRouteMap>());
             services.TryAdd(ServiceDescriptor.Transient<ILinksHandlerContextFactory, DefaultLinksHandlerContextFactory>());
             services.TryAdd(ServiceDescriptor.Transient<ILinksPolicyProvider, DefaultLinksPolicyProvider>());
             services.TryAdd(ServiceDescriptor.Transient<ILinkTransformationContextFactory, DefaultLinkTransformationContextFactory>());
