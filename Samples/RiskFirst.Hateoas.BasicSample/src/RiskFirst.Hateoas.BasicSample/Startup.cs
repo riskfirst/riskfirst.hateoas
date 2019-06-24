@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using RiskFirst.Hateoas.BasicSample.Models;
-using RiskFirst.Hateoas.Models;
 using RiskFirst.Hateoas.BasicSample.Repository;
-using System.Reflection;
+using RiskFirst.Hateoas.Models;
+using System.Net.Http.Headers;
 
 namespace RiskFirst.Hateoas.BasicSample
 {
     public class Startup
-    {       
+    {
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -35,18 +32,18 @@ namespace RiskFirst.Hateoas.BasicSample
             {
                 // Uncomment the next line to use relative hrefs instead of absolute
                 //config.UseRelativeHrefs();
-               
+
                 config.AddPolicy<ValueInfo>(policy =>
                 {
                     policy.RequireRoutedLink("self", "GetValueByIdRoute", x => new { id = x.Id });
                 });
-                config.AddPolicy<ValueInfo>("FullInfoPolicy",policy =>
-                {
-                    policy.RequireSelfLink()
-                            .RequireRoutedLink("update", "GetValueByIdRoute", x => new { id = x.Id })
-                            .RequireRoutedLink("delete", "DeleteValueRoute", x => new { id = x.Id })
-                            .RequireRoutedLink("all", "GetAllValuesRoute");
-                });
+                config.AddPolicy<ValueInfo>("FullInfoPolicy", policy =>
+                 {
+                     policy.RequireSelfLink()
+                             .RequireRoutedLink("update", "GetValueByIdRoute", x => new { id = x.Id })
+                             .RequireRoutedLink("delete", "DeleteValueRoute", x => new { id = x.Id })
+                             .RequireRoutedLink("all", "GetAllValuesRoute");
+                 });
 
                 config.AddPolicy<ItemsLinkContainer<ValueInfo>>(policy =>
                 {
@@ -54,8 +51,14 @@ namespace RiskFirst.Hateoas.BasicSample
                             .RequireRoutedLink("insert", "InsertValueRoute");
                 });
             });
+
             // Add framework services.
-            services.AddMvc();
+            services.AddMvc(options =>
+            {
+                options.OutputFormatters.Add(new XmlSerializerOutputFormatter());
+                options.FormatterMappings.SetMediaTypeMappingForFormat("xml", MediaTypeHeaderValue.Parse("application/xml").MediaType);
+                options.FormatterMappings.SetMediaTypeMappingForFormat("json", MediaTypeHeaderValue.Parse("application/json").MediaType);
+            });
 
             services.AddSingleton<IValuesRepository, ValuesRepository>();
         }

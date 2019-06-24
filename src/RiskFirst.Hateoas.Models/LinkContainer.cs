@@ -1,23 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using Newtonsoft.Json;
+using System.Xml.Serialization;
 
 namespace RiskFirst.Hateoas.Models
 {
     public abstract class LinkContainer : ILinkContainer
     {
-        private Dictionary<string, Link> links;
+        [XmlElement("link")]
         [JsonProperty(PropertyName = "_links")]
-        public Dictionary<string, Link> Links
-        {
-            get { return links ?? (links = new Dictionary<string, Link>()); }
+        public LinkCollection Links { get; set; } = new LinkCollection();
 
-            set { links = value; }
-        }
-
-        public void AddLink(string id, Link link)
+        public void Add(Link link)
         {
-            Links.Add(id, link);
+            Links.Add(link);
         }
     }
 }
