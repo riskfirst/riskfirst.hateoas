@@ -12,6 +12,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http.Internal;
+using Microsoft.Extensions.Primitives;
 
 namespace RiskFirst.Hateoas.Tests.Infrastructure
 {
@@ -22,12 +24,18 @@ namespace RiskFirst.Hateoas.Tests.Infrastructure
         private List<ILinksHandler> handlers = new List<ILinksHandler>() { new PassThroughLinksHandler() };
        
         private Mock<HttpContext> httpContextMock = new Mock<HttpContext>();
+        private Mock<HttpRequest> requestMock = new Mock<HttpRequest>();
         private RouteData routeData = new RouteData();
         private Mock<ILinkTransformation> hrefTransformationMock;
         private Mock<ILinkTransformation> relTransformationMock;
         private Mock<ClaimsIdentity> identityMock;
         private Mock<ClaimsPrincipal> principalMock;
         private Mock<IAuthorizationService> authServiceMock;
+
+        public TestCaseBuilder()
+        {
+            httpContextMock.Setup(h => h.Request).Returns(requestMock.Object);
+        }
 
         public TestCaseBuilder UseBasicTransformations()
         {
@@ -83,6 +91,12 @@ namespace RiskFirst.Hateoas.Tests.Infrastructure
             var mockRouteMap = new Mock<IRouteMap>();
             configureRouteMap?.Invoke(mockRouteMap);
             this.routeMap = mockRouteMap.Object;
+            return this;
+        }
+
+        public TestCaseBuilder WithQueryParams(Dictionary<string, StringValues> queryParams = null)
+        {
+            requestMock.Setup(r => r.Query).Returns(new QueryCollection(queryParams));
             return this;
         }
 

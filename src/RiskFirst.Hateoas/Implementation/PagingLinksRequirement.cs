@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Http;
 using RiskFirst.Hateoas.Models;
 using System;
 using System.Linq;
@@ -34,6 +35,7 @@ namespace RiskFirst.Hateoas.Implementation
 
             var route = context.CurrentRoute;
             var values = context.CurrentRouteValues;
+            var queryParams = context.CurrentQueryValues;
 
             if (condition != null && condition.RequiresAuthorization)
             {
@@ -44,25 +46,29 @@ namespace RiskFirst.Hateoas.Implementation
                 }
             }
 
-            context.Links.Add(new LinkSpec(requirement.CurrentId, route, GetPageValues(values, pagingResource.PageNumber, pagingResource.PageSize)));
+            context.Links.Add(new LinkSpec(requirement.CurrentId, route, GetPageValues(values, queryParams, pagingResource.PageNumber, pagingResource.PageSize)));
 
             var addPrevLink = ShouldAddPreviousPageLink(pagingResource.PageNumber);
             var addNextLink = ShouldAddNextPageLink(pagingResource.PageNumber, pagingResource.PageCount);
             if (addPrevLink)
             {
-                context.Links.Add(new LinkSpec(requirement.PreviousId, route, GetPageValues(values, pagingResource.PageNumber - 1, pagingResource.PageSize)));
+                context.Links.Add(new LinkSpec(requirement.PreviousId, route, GetPageValues(values, queryParams, pagingResource.PageNumber - 1, pagingResource.PageSize)));
             }
             if (addNextLink)
             {
-                context.Links.Add(new LinkSpec(requirement.NextId, route, GetPageValues(values, pagingResource.PageNumber + 1, pagingResource.PageSize)));
+                context.Links.Add(new LinkSpec(requirement.NextId, route, GetPageValues(values, queryParams, pagingResource.PageNumber + 1, pagingResource.PageSize)));
             }
             context.Handled(requirement);
             return;
         }
 
-        private RouteValueDictionary GetPageValues(object values, int pageNumber, int pageSize)
+        private RouteValueDictionary GetPageValues(object values, IQueryCollection queryValues, int pageNumber, int pageSize)
         {
             var newValues = new RouteValueDictionary(values);
+            foreach (var queryValue in queryValues)
+            {
+                newValues.Add(queryValue.Key, queryValue.Value);
+            }
             newValues.Add("pagenumber", pageNumber);
             newValues.Add("pagesize", pageSize);
             return newValues;
