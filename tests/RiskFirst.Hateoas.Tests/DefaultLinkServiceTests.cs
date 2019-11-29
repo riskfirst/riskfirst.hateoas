@@ -13,6 +13,7 @@ using Xunit;
 using System.Collections;
 using System.Linq;
 using RiskFirst.Hateoas.Models;
+using Microsoft.Extensions.Primitives;
 
 namespace RiskFirst.Hateoas.Tests
 {
@@ -702,7 +703,7 @@ namespace RiskFirst.Hateoas.Tests
         [MemberData(nameof(CreatePagedLinkTestData))]
         [Trait("Requirement", "PagedLink")]
         [Trait("PolicySelection", "DefaultType")]
-        public async Task GivenMultiplePages_AddsCorrectLinksToModel(int pageSize, int pageCount, int pageNumber, IEnumerable<PagedLinkExpectation> linkExpectations)
+        public async Task GivenMultiplePages_AddsCorrectLinksToModel(int pageSize, int pageCount, int pageNumber, Dictionary<string, StringValues> queryParams, IEnumerable<PagedLinkExpectation> linkExpectations)
         {
             // Arrange
             var testCase = ConfigureTestCase(builder =>
@@ -716,7 +717,8 @@ namespace RiskFirst.Hateoas.Tests
                      .AddPolicy<TestPagedLinkContainer>(policy =>
                      {
                          policy.RequiresPagingLinks();
-                     });
+                     })
+                    .WithQueryParams(queryParams);
             });
 
             // Act
@@ -734,7 +736,12 @@ namespace RiskFirst.Hateoas.Tests
                 if (exp.ShouldExist)
                 {
                     Assert.True(model.Links.ContainsKey(exp.Id));
-                    Assert.Equal($"PagedRoute?pagenumber={exp.ExpectedPageNumber}&pagesize={exp.ExpectedPageSize}", model.Links[exp.Id].Href);
+                    if (queryParams != null && queryParams.Any()) {
+                        var queryParamsString = string.Join("&", queryParams.Where(x => x.Key != "pagenumber" && x.Key != "pagesize").Select(x => x.Key + "=" + x.Value));
+                        Assert.Equal($"PagedRoute?{queryParamsString}&pagenumber={exp.ExpectedPageNumber}&pagesize={exp.ExpectedPageSize}", model.Links[exp.Id].Href);
+                    } else {
+                        Assert.Equal($"PagedRoute?pagenumber={exp.ExpectedPageNumber}&pagesize={exp.ExpectedPageSize}", model.Links[exp.Id].Href);
+                    }
                 }
                 else
                 {
@@ -750,7 +757,7 @@ namespace RiskFirst.Hateoas.Tests
         [Trait("Requirement", "PagedLink")]
         [MemberData(nameof(CreatePagedLinkTestData))]
         [Trait("PolicySelection", "DefaultType")]
-        public async Task GivenMultiplePagesWithAssertion_AddsCorrectLinksToModel(int pageSize, int pageCount, int pageNumber, IEnumerable<PagedLinkExpectation> linkExpectations)
+        public async Task GivenMultiplePagesWithAssertion_AddsCorrectLinksToModel(int pageSize, int pageCount, int pageNumber, Dictionary<string, StringValues> queryParams, IEnumerable<PagedLinkExpectation> linkExpectations)
         {
             // Arrange
             var testCase = ConfigureTestCase(builder =>
@@ -798,7 +805,7 @@ namespace RiskFirst.Hateoas.Tests
         [Trait("Requirement", "PagedLink")]
         [MemberData(nameof(CreatePagedLinkTestData))]
         [Trait("PolicySelection", "DefaultType")]
-        public async Task GivenMultiplePagesWithNegativeAssertion_DoesNotAddLinksToModel(int pageSize, int pageCount, int pageNumber, IEnumerable<PagedLinkExpectation> linkExpectations)
+        public async Task GivenMultiplePagesWithNegativeAssertion_DoesNotAddLinksToModel(int pageSize, int pageCount, int pageNumber, Dictionary<string, StringValues> queryParams, IEnumerable<PagedLinkExpectation> linkExpectations)
         {
             // Arrange
             var testCase = ConfigureTestCase(builder =>
@@ -835,7 +842,7 @@ namespace RiskFirst.Hateoas.Tests
         [Trait("Requirement", "PagedLink")]
         [MemberData(nameof(CreatePagedLinkTestData))]
         [Trait("PolicySelection", "DefaultType")]
-        public async Task GivenMultiplePagesRequireingAuth_AddsLinksToModel_WhenGranted(int pageSize, int pageCount, int pageNumber, IEnumerable<PagedLinkExpectation> linkExpectations)
+        public async Task GivenMultiplePagesRequireingAuth_AddsLinksToModel_WhenGranted(int pageSize, int pageCount, int pageNumber, Dictionary<string, StringValues> queryParams, IEnumerable<PagedLinkExpectation> linkExpectations)
         {
             // Arrange
             var testCase = ConfigureTestCase(builder =>
@@ -885,7 +892,7 @@ namespace RiskFirst.Hateoas.Tests
         [Trait("Requirement", "PagedLink")]
         [MemberData(nameof(CreatePagedLinkTestData))]
         [Trait("PolicySelection", "DefaultType")]
-        public async Task GivenMultiplePagesRequireingAuth_DoesNotAddLinksToModel_WhenDenied(int pageSize, int pageCount, int pageNumber, IEnumerable<PagedLinkExpectation> linkExpectations)
+        public async Task GivenMultiplePagesRequireingAuth_DoesNotAddLinksToModel_WhenDenied(int pageSize, int pageCount, int pageNumber, Dictionary<string, StringValues> queryParams, IEnumerable<PagedLinkExpectation> linkExpectations)
         {
             // Arrange
             var testCase = ConfigureTestCase(builder =>
@@ -920,21 +927,30 @@ namespace RiskFirst.Hateoas.Tests
             contextMock.Verify(x => x.Skipped(It.IsAny<PagingLinksRequirement<TestPagedLinkContainer>>(),LinkRequirementSkipReason.Authorization,null), Times.Once());
         }
 
-        public static IEnumerable<object[]> CreatePagedLinkTestData()
-        {
+        public static IEnumerable<object[]> CreatePagedLinkTestData() {
+            // int pageSize, int pageCount, int pageNumber, Dictionary<string, StringValues> queryParams, IEnumerable<PagedLinkExpectation> linkExpectations
+
             // Test case 1: first page of multiple pages
-            yield return new object[] { 50, 3, 1,
+            yield return new object[] { 50, 3, 1, null,
                 new[] { new PagedLinkExpectation("currentPage",true,1,50), new PagedLinkExpectation("nextPage", true, 2, 50), new PagedLinkExpectation("previousPage", false) } };
             // Test case 2: mid page of multiple pages
-            yield return new object[] { 50, 3, 2,
+            yield return new object[] { 50, 3, 2, null,
                 new[] { new PagedLinkExpectation("currentPage",true,2,50), new PagedLinkExpectation("nextPage", true, 3, 50), new PagedLinkExpectation("previousPage", true, 1, 50) } };
             // Test case 3: last page of multiple pages
-            yield return new object[] { 50, 3, 3,
+            yield return new object[] { 50, 3, 3, null,
                 new[] { new PagedLinkExpectation("currentPage",true,3,50), new PagedLinkExpectation("nextPage", false), new PagedLinkExpectation("previousPage", true, 2, 50) } };
             // Test case 4: first page of single page
-            yield return new object[] { 50, 1, 1,
+            yield return new object[] { 50, 1, 1, null,
                 new[] { new PagedLinkExpectation("currentPage",true,1,50), new PagedLinkExpectation("nextPage", false), new PagedLinkExpectation("previousPage", false) } };
-
+            // Test case 5: first page of single page with extra query params
+            yield return new object[] { 50, 1, 1, new Dictionary<string, StringValues>
+                {
+                    { "pagenumber", new StringValues("1")},
+                    { "pagesize", new StringValues("50")},
+                    { "firstParamKey", new StringValues("test")},
+                    { "secondParmaKey", new StringValues("1,2,3")}
+                },
+                new[] { new PagedLinkExpectation("currentPage",true,1,50), new PagedLinkExpectation("nextPage", false), new PagedLinkExpectation("previousPage", false) } };
         }
 
         public class PagedLinkExpectation
@@ -1139,7 +1155,7 @@ namespace RiskFirst.Hateoas.Tests
         [MemberData(nameof(CreatePagedLinkTestData))]
         [Trait("Requirement", "PagedLink")]
         [Trait("PolicySelection", "DefaultType")]
-        public async Task WhenCombiningWithInterfaceType_AddsCorrectLinksToModel(int pageSize, int pageCount, int pageNumber, IEnumerable<PagedLinkExpectation> linkExpectations)
+        public async Task WhenCombiningWithInterfaceType_AddsCorrectLinksToModel(int pageSize, int pageCount, int pageNumber, Dictionary<string, StringValues> queryParams, IEnumerable<PagedLinkExpectation> linkExpectations)
         {
             // Arrange
             var testCase = ConfigureTestCase(builder =>

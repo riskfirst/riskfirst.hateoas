@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -63,6 +65,7 @@ namespace RiskFirst.Hateoas
 
         public RouteInfo CurrentRoute => RouteMap.GetCurrentRoute();
         public RouteValueDictionary CurrentRouteValues => ActionContext?.RouteData?.Values;
+        public IQueryCollection CurrentQueryValues => ActionContext?.HttpContext?.Request?.Query ?? new QueryCollection();
 
         public virtual IList<ILinkSpec> Links { get; } = new List<ILinkSpec>();
         
