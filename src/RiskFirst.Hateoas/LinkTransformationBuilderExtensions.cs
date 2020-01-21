@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Routing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,15 +8,15 @@ namespace RiskFirst.Hateoas
 {
     public static class LinkTransformationBuilderExtensions
     {
-        public static LinkTransformationBuilder AddProtocol(this LinkTransformationBuilder builder)
+        public static LinkTransformationBuilder AddProtocol(this LinkTransformationBuilder builder, string scheme = null)
         {
-            return builder.Add(ctx => String.Concat(ctx.HttpContext.Request.Scheme, "://"));
+            return builder.Add(ctx => String.Concat(scheme ?? ctx.HttpContext.Request.Scheme, "://"));
         }
 
         public static LinkTransformationBuilder AddHost(this LinkTransformationBuilder builder)
         {
             return builder.Add(ctx => ctx.HttpContext.Request.Host.ToUriComponent());
-        }      
+        }
 
         public static LinkTransformationBuilder AddRoutePath(this LinkTransformationBuilder builder)
         {
@@ -35,7 +35,7 @@ namespace RiskFirst.Hateoas
         }
         public static LinkTransformationBuilder AddVirtualPath(this LinkTransformationBuilder builder,string path)
         {
-            return builder.AddVirtualPath(ctx => path);            
+            return builder.AddVirtualPath(ctx => path);
         }
         public static LinkTransformationBuilder AddVirtualPath(this LinkTransformationBuilder builder,Func<LinkTransformationContext, string> getPath)
         {
