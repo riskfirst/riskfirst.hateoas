@@ -22,7 +22,7 @@ namespace RiskFirst.Hateoas.Tests.Infrastructure
         private IRouteMap routeMap;
         private LinksOptions options = new LinksOptions();
         private List<ILinksHandler> handlers = new List<ILinksHandler>() { new PassThroughLinksHandler() };
-       
+
         private Mock<HttpContext> httpContextMock = new Mock<HttpContext>();
         private Mock<HttpRequest> requestMock = new Mock<HttpRequest>();
         private RouteData routeData = new RouteData();
@@ -97,6 +97,12 @@ namespace RiskFirst.Hateoas.Tests.Infrastructure
         public TestCaseBuilder WithQueryParams(Dictionary<string, StringValues> queryParams = null)
         {
             requestMock.Setup(r => r.Query).Returns(new QueryCollection(queryParams));
+            return this;
+        }
+
+        public TestCaseBuilder WithRequestScheme(string scheme)
+        {
+            requestMock.Setup(r => r.Scheme).Returns(scheme);
             return this;
         }
 

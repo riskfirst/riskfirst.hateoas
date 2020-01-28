@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Options;
 using Moq;
 using RiskFirst.Hateoas.Tests.Infrastructure;
 using System;
@@ -11,7 +11,7 @@ using Xunit;
 namespace RiskFirst.Hateoas.Tests
 {
     [Trait("Category","Evaluation")]
-    public class DefaultLinksEvaluatorTests 
+    public class DefaultLinksEvaluatorTests
     {
         private LinksEvaluatorTestCase ConfigureTestCase(Action<TestCaseBuilder> configureTest)
         {
@@ -49,8 +49,8 @@ namespace RiskFirst.Hateoas.Tests
             Assert.Equal("rel", model.Links["testLink"].Rel);
 
             testCase.HrefTransformMock.Verify(x => x.Transform(It.IsAny<LinkTransformationContext>()), Times.Once());
-            testCase.RelTransformMock.Verify(x => x.Transform(It.IsAny<LinkTransformationContext>()), Times.Once());           
-            
+            testCase.RelTransformMock.Verify(x => x.Transform(It.IsAny<LinkTransformationContext>()), Times.Once());
+
         }
 
         [AutonamedFact]
@@ -73,6 +73,54 @@ namespace RiskFirst.Hateoas.Tests
             // Assert
             Assert.True(model.Links.Count == 1, "Incorrect number of links applied");
             Assert.Equal("abc", model.Links["testLink"].Href);
+
+            testCase.RelTransformMock.Verify(x => x.Transform(It.IsAny<LinkTransformationContext>()), Times.Once());
+        }
+
+        [AutonamedFact]
+        public void GivenLinkBuilderTransform_UsingDefaultAddProtocol_HrefIsBuiltUsingRequestScheme()
+        {
+            // Arrange
+            var testCase = ConfigureTestCase(builder =>
+            {
+                builder.WithRequestScheme(Uri.UriSchemeHttp);
+                builder.UseLinkBuilderHrefTransformation(href => href.AddProtocol())
+                        .UseMockRelTransformation(null);
+            });
+            var mockLinkSpec = new Mock<ILinkSpec>();
+            mockLinkSpec.SetupGet(x => x.Id).Returns("testLink");
+            mockLinkSpec.SetupGet(x => x.HttpMethod).Returns(HttpMethod.Get);
+
+            // Act
+            var model = new TestLinkContainer();
+            testCase.UnderTest.BuildLinks(new[] { mockLinkSpec.Object }, model);
+
+            // Assert
+            Assert.Equal("http://", model.Links["testLink"].Href);
+
+            testCase.RelTransformMock.Verify(x => x.Transform(It.IsAny<LinkTransformationContext>()), Times.Once());
+        }
+
+        [AutonamedFact]
+        public void GivenLinkBuilderTransform_UsingOverriddenAddProtocol_HrefIsBuiltUsingProvidedScheme()
+        {
+            // Arrange
+            var testCase = ConfigureTestCase(builder =>
+            {
+                builder.WithRequestScheme(Uri.UriSchemeHttp);
+                builder.UseLinkBuilderHrefTransformation(href => href.AddProtocol(Uri.UriSchemeHttps))
+                        .UseMockRelTransformation(null);
+            });
+            var mockLinkSpec = new Mock<ILinkSpec>();
+            mockLinkSpec.SetupGet(x => x.Id).Returns("testLink");
+            mockLinkSpec.SetupGet(x => x.HttpMethod).Returns(HttpMethod.Get);
+
+            // Act
+            var model = new TestLinkContainer();
+            testCase.UnderTest.BuildLinks(new[] { mockLinkSpec.Object }, model);
+
+            // Assert
+            Assert.Equal("https://", model.Links["testLink"].Href);
 
             testCase.RelTransformMock.Verify(x => x.Transform(It.IsAny<LinkTransformationContext>()), Times.Once());
         }
