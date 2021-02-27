@@ -65,7 +65,7 @@ namespace RiskFirst.Hateoas.Implementation
         private RouteValueDictionary GetPageValues(object values, IQueryCollection queryValues, int pageNumber, int pageSize)
         {
             var newValues = new RouteValueDictionary(values);
-            foreach (var queryValue in queryValues.Where(q => q.Key != "pagenumber" && q.Key != "pagesize"))
+            foreach (var queryValue in queryValues?.Where(q => q.Key != "pagenumber" && q.Key != "pagesize"))
             {
                 newValues.Add(queryValue.Key, queryValue.Value);
             }
