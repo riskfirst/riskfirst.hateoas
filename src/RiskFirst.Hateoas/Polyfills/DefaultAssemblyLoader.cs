@@ -17,7 +17,7 @@ namespace RiskFirst.Hateoas.Polyfills
             var thisAssembly = GetType().GetTypeInfo().Assembly.GetName().Name;
             var libraries =
                 DependencyContext.Default
-                    .CompileLibraries
+                    .RuntimeLibraries
                     .Where(l => l.Dependencies.Any(d => d.Name.Equals(thisAssembly)));
 
             var names = libraries.Select(l => l.Name).Distinct();
