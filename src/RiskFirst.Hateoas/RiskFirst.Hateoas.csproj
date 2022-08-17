@@ -26,11 +26,13 @@
         v2.0.0 - Upgrade framework and dependencies to netstandard2/net461
         v3.0.0 - extract models to separate assembly
         v3.1.0 - netcore package reference upgrade to 2.1
-        v3.1.1 - bug fix for routes with more than 1 HttpMethodAttribute</PackageReleaseNotes>
-    <Version>3.1.1</Version>
+        v3.1.1 - bug fix for routes with more than 1 HttpMethodAttribute
+        v3.1.2 - Patch Security Issues
+    </PackageReleaseNotes>
+    <Version>3.1.2</Version>
     <PackageIconUrl>https://raw.githubusercontent.com/riskfirst/pkgicons/master/riskfirst-pkg.png</PackageIconUrl>
-    <AssemblyVersion>3.1.1.0</AssemblyVersion>
-    <FileVersion>3.1.1.0</FileVersion>
+    <AssemblyVersion>3.1.2.0</AssemblyVersion>
+    <FileVersion>3.1.2.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -38,7 +40,9 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Routing.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
+    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
   </ItemGroup>
 
   <ItemGroup>
