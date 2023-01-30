@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RiskFirst.Hateoas.LinkConfigurationSample.Models;
-using RiskFirst.Hateoas.Models;
 using RiskFirst.Hateoas.LinkConfigurationSample.Repository;
+using RiskFirst.Hateoas.Models;
 
 namespace RiskFirst.Hateoas.LinkConfigurationSample.Controllers
 {
+    [ApiController]
     [Route("api/[controller]")]
-    public class ValuesController : Controller
+    public class ValuesController : ControllerBase
     {
         private readonly IValuesRepository repo;
         private readonly ILinksService linksService;
@@ -22,7 +19,7 @@ namespace RiskFirst.Hateoas.LinkConfigurationSample.Controllers
         }
 
         // GET api/values
-        [HttpGet( Name = "GetAllValuesRoute")]
+        [HttpGet(Name = "GetAllValuesRoute")]
         public async Task<ItemsLinkContainer<ValueInfo>> Get()
         {
             var values = await GetAllValuesWithLinksAsync();
@@ -47,18 +44,18 @@ namespace RiskFirst.Hateoas.LinkConfigurationSample.Controllers
 
         // POST api/values
         [HttpPost(Name = "InsertValueRoute")]
-        public void Post([FromBody]string value)
+        public void Post([FromBody] string value)
         {
         }
 
         // PUT api/values/5
-        [HttpPut("{id}",Name = "UpdateValueRoute")]
-        public void Put(int id, [FromBody]string value)
+        [HttpPut("{id}", Name = "UpdateValueRoute")]
+        public void Put(int id, [FromBody] string value)
         {
         }
 
         // DELETE api/values/5
-        [HttpDelete("{id}",Name = "DeleteValueRoute")]
+        [HttpDelete("{id}", Name = "DeleteValueRoute")]
         public void Delete(int id)
         {
         }

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <AssemblyName>RiskFirst.Hateoas</AssemblyName>
     <PackageId>RiskFirst.Hateoas</PackageId>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
@@ -28,21 +28,16 @@
         v3.1.0 - netcore package reference upgrade to 2.1
         v3.1.1 - bug fix for routes with more than 1 HttpMethodAttribute
         v3.1.2 - Patch Security Issues
+        v4.0.0 - Drop .NET Framework support
     </PackageReleaseNotes>
-    <Version>3.1.2</Version>
+    <Version>4.0.0</Version>
     <PackageIconUrl>https://raw.githubusercontent.com/riskfirst/pkgicons/master/riskfirst-pkg.png</PackageIconUrl>
-    <AssemblyVersion>3.1.2.0</AssemblyVersion>
-    <FileVersion>3.1.2.0</FileVersion>
+    <AssemblyVersion>4.0.0.0</AssemblyVersion>
+    <FileVersion>4.0.0.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Routing.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="System.Net.Http" Version="4.3.4" />
-    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
   </ItemGroup>
 
   <ItemGroup>

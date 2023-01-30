@@ -1,4 +1,4 @@
-﻿using RiskFirst.Hateoas.CustomRequirementSample.Requirement;
+using RiskFirst.Hateoas.CustomRequirementSample.Requirement;
 
 namespace RiskFirst.Hateoas.CustomRequirementSample
 {

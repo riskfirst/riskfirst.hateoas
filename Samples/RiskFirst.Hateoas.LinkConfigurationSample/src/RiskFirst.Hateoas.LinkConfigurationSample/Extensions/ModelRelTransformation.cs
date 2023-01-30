@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace RiskFirst.Hateoas.LinkConfigurationSample.Extensions
 {
@@ -23,7 +19,7 @@ namespace RiskFirst.Hateoas.LinkConfigurationSample.Extensions
             {
                 if (returnType.GetGenericTypeDefinition().IsAssignableFrom(typeof(Task<>)))
                 {
-                    sb.Append( GetTypePathInfo(returnType.GetGenericArguments()[0]));
+                    sb.Append(GetTypePathInfo(returnType.GetGenericArguments()[0]));
                 }
                 else
                 {
