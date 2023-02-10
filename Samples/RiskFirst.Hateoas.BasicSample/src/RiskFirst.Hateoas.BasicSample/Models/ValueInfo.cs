@@ -1,4 +1,4 @@
-﻿using RiskFirst.Hateoas.Models;
+using RiskFirst.Hateoas.Models;
 
 namespace RiskFirst.Hateoas.BasicSample.Models
 {

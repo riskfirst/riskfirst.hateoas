@@ -1,6 +1,6 @@
 # RiskFirst.Hateoas
 
-![CI Build](https://riskfirst.visualstudio.com/_apis/public/build/definitions/2e2e46bb-1ab7-484e-8117-335c3855d65d/326/badge)
+[![CI Build](https://github.com/riskfirst/riskfirst.hateoas/actions/workflows/build.yml/badge.svg)](https://github.com/riskfirst/riskfirst.hateoas/actions/workflows/build.yml)
 
 An implementation of [HATEOAS](https://en.wikipedia.org/wiki/HATEOAS) for aspnet core web api projects which gives full control of which links to apply to models returned from your api. In order to communicate varying state to the end-user, this library fully integrates with Authorization, and allows arbitrary conditions to determine whether to show or hide HATEOAS links between api resources.
 
@@ -21,7 +21,7 @@ public class Startup
 {
   public void ConfigureServices(IServicesCollection services)
   {
-    services.AddLinks(config => 
+    services.AddLinks(config =>
     {
       config.AddPolicy<MyModel>(policy => {
           policy.RequireSelfLink()
@@ -33,19 +33,19 @@ public class Startup
 }
 ```
 
-Inject ```ILinksService``` into any controller (or other class in your project) to add links to a model.
+Inject `ILinksService` into any controller (or other class in your project) to add links to a model.
 
 ```csharp
 [Route("api/[controller]")]
 public class MyController : Controller
 {
     private readonly ILinksService linksService;
-    
+
     public MyController(ILinksService linksService)
     {
         this.linksService = linksService;
     }
-   
+
     [HttpGet("{id}",Name = "GetModelRoute")]
     public async Task<MyModel> GetMyModel(int id)
     {
@@ -58,7 +58,7 @@ public class MyController : Controller
     {
          //... snip .. //
     }
-    
+
     [HttpDelete("{id}",Name = "DeleteModelRoute")]
     public async Task<MyModel> DeleteMyModel(int id)
     {
@@ -71,9 +71,9 @@ The above code would produce a response as the example below
 
 ```json
 {
-   "id": 1,
-   "someOtherField": "foo",
-   "_links" : {
+  "id": 1,
+  "someOtherField": "foo",
+  "_links": {
     "self": {
       "rel": "MyController\\GetModelRoute",
       "href": "https://api.example.com/my/1",
@@ -108,19 +108,19 @@ or if you're using XML
 
 ### Multiple policies for a model
 
-It is possible to specify multiple named policies for a model during startup by providing a policy name to ```AddPolicy```. For example, you could have the default (unnamed) policy give basic links when the model is part of a list, but more detailed information when a model is returned alone.
+It is possible to specify multiple named policies for a model during startup by providing a policy name to `AddPolicy`. For example, you could have the default (unnamed) policy give basic links when the model is part of a list, but more detailed information when a model is returned alone.
 
 ```csharp
 public class Startup
 {
   public void ConfigureServices(IServicesCollection services)
   {
-    services.AddLinks(config => 
+    services.AddLinks(config =>
     {
       config.AddPolicy<MyModel>(policy => {
           policy.RequireRoutedLink("self","GetModelRoute", x => new {id = x.Id })
       });
-      
+
       config.AddPolicy<MyModel>("FullInfo",policy => {
           policy.RequireSelfLink()
                 .RequireRoutedLink("all", "GetAllModelsRoute")
@@ -133,25 +133,25 @@ public class Startup
 }
 ```
 
-With a named policy, this can be applied at runtime using an overload of ```AddLinksAsync``` which takes a policy name:
+With a named policy, this can be applied at runtime using an overload of `AddLinksAsync` which takes a policy name:
 
 ```csharp
 await linksService.AddLinksAsync(model,"FullInfo");
 ```
 
-You can also markup your controller method with a ```LinksAttribute``` to override the default policy applied. The below code would apply the "FullInfo" profile to the returned model without having to specify the policy name in the call to ```AddLinksAsync```.
+You can also markup your controller method with a `LinksAttribute` to override the default policy applied. The below code would apply the "FullInfo" profile to the returned model without having to specify the policy name in the call to `AddLinksAsync`.
 
 ```csharp
 [Route("api/[controller]")]
 public class MyController : Controller
 {
     private readonly ILinksService linksService;
-    
+
     public MyController(ILinksService linksService)
     {
         this.linksService = linksService;
     }
-   
+
     [HttpGet("{id}",Name = "GetModelRoute")]
     [Links(Policy = "FullInfo")]
     public async Task<MyModel> GetMyModel(int id)
@@ -167,19 +167,19 @@ Another way to achieve the same thing is to mark the actual object with the `Lin
 
 ```csharp
 [Links(Policy="FullInfo")]
-public class MyModel : LinkContainer 
+public class MyModel : LinkContainer
 { }
 
 [Route("api/[controller]")]
 public class MyController : Controller
 {
     private readonly ILinksService linksService;
-    
+
     public MyController(ILinksService linksService)
     {
         this.linksService = linksService;
     }
-   
+
     [HttpGet("{id}",Name = "GetModelRoute")]
     public async Task<MyModel> GetMyModel(int id)
     {
@@ -190,14 +190,14 @@ public class MyController : Controller
 }
 ```
 
-There are further overloads of `AddLinksAsync` which take an instance of  [`ILinksPolicy`](src/RiskFirst.Hateoas/ILinksPolicy.cs) or an array of [`ILinksRequirement`](src/RiskFirst.Hateoas/ILinksRequirement.cs) which will be evaluated at runtime. This should give complete control of which links are applied at any point within your api code.
+There are further overloads of `AddLinksAsync` which take an instance of [`ILinksPolicy`](src/RiskFirst.Hateoas/ILinksPolicy.cs) or an array of [`ILinksRequirement`](src/RiskFirst.Hateoas/ILinksRequirement.cs) which will be evaluated at runtime. This should give complete control of which links are applied at any point within your api code.
 
 ### Configuring Href and Rel transformations
 
 There should not have much need to change how the `Href` is transformed, however one common requirement is to output relative instead of absolute uris. This can be tried in the [Basic Sample](Samples/RiskFirst.Hateoas.BasicSample)
 
 ```csharp
-services.AddLinks(config => 
+services.AddLinks(config =>
 {
   config.UseRelativeHrefs();
   ...
@@ -207,7 +207,7 @@ services.AddLinks(config =>
 Both Href and Rel transformations can be fully controlled by supplying a class or Type which implements [`ILinkTransformation`](src/RiskFirst.Hateoas/ILinkTransformation.cs).
 
 ```csharp
-services.AddLinks(config => 
+services.AddLinks(config =>
 {
   // supply a type implementing ILinkTransformation
   config.UseHrefTransformation<MyHrefTransformation>();
@@ -219,7 +219,7 @@ services.AddLinks(config =>
 Alternatively, transformations can be configured using a builder syntax
 
 ```csharp
-services.AddLinks(config => 
+services.AddLinks(config =>
 {
   // output a uri for the rel values
   config.ConfigureRelTransformation(transform => transform.AddProtocol()
@@ -227,6 +227,7 @@ services.AddLinks(config =>
                                                           .AddVirtualPath(ctx => $"/rel/{ctx.LinkSpec.ControllerName}/{ctx.LinkSpec.RouteName}");
 });
 ```
+
 Both ways of customizaing transformations can be seen in the [LinkConfigurationSample](samples/RiskFirst.Hateoas.LinkConfigurationSample).
 
 ### Authorization and Conditional links
@@ -240,16 +241,16 @@ public class Startup
 {
   public void ConfigureServices(IServicesCollection services)
   {
-    services.AddLinks(config => 
-    {      
+    services.AddLinks(config =>
+    {
       config.AddPolicy<MyModel>("FullInfo",policy => {
           policy.RequireSelfLink()
                 .RequireRoutedLink("all", "GetAllModelsRoute")
-                .RequireRoutedLink("parentModels", "GetParentModelRoute", 
+                .RequireRoutedLink("parentModels", "GetParentModelRoute",
                                       x => new { parentId = x.ParentId }, condition => condition.AuthorizeRoute());
-                .RequireRoutedLink("subModels", "GetSubModelsRoute", 
+                .RequireRoutedLink("subModels", "GetSubModelsRoute",
                                       x => new { id = x.Id }, condition => condition.AuthorizeRoute());
-                .RequireRoutedLink("delete", "DeleteModelRoute", 
+                .RequireRoutedLink("delete", "DeleteModelRoute",
                                       x => new { id = x.Id }, condition => condition.AuthorizeRoute());
       });
     });
@@ -286,6 +287,7 @@ public class ApiRootLinkRequirement : ILinksRequirement
     public string Id { get; set; } = "root";
 }
 ```
+
 Given this requirement, we need a class to handle it, which must implement `ILinkHandler` and handle your requirement.
 
 ```csharp
@@ -309,16 +311,16 @@ Finally register your Handler with `IServicesCollection` and use the requirement
 public class Startup
 {
   public void ConfigureServices(IServicesCollection services)
-  {   
-    services.AddLinks(config => 
+  {
+    services.AddLinks(config =>
     {
-      config.AddPolicy<MyModel>(policy => 
+      config.AddPolicy<MyModel>(policy =>
       {
           policy.RequireRoutedLink("self","GetModelRoute", x => new {id = x.Id })
                 .Requires<ApiRootLinkRequirement>();
       });
     });
-    
+
     services.AddTransient<ILinksHandler,ApiRootLinkHandler>();
   }
 }
@@ -345,12 +347,12 @@ public class Startup
 
 The list of interfaces which have a default implementation, but which can be replaced is:
 
-- [`ILinkAuthorizationService`](src/RiskFirst.Hateoas/ILinkAuthorizationService.cs), 
-controls how links are authorized during link condition evaluation.
+- [`ILinkAuthorizationService`](src/RiskFirst.Hateoas/ILinkAuthorizationService.cs),
+  controls how links are authorized during link condition evaluation.
 - [`ILinksEvaluator`](src/RiskFirst.Hateoas/ILinksEvaluator.cs), controls how links are evaluated and transformed before being written to the returned model.
 - [`ILinksHandlerContextFactory`](src/RiskFirst.Hateoas/ILinksHandlerContextFactory.cs), controls how the context is created which is passed through the requirement handlers during processing.
 - [`ILinksPolicyProvider`](src/RiskFirst.Hateoas/ILinksPolicyProvider.cs), provides lookup for `ILinkPolicy` instances by resource type and name.
-- [`ILinksService`](src/RiskFirst.Hateoas/ILinksService.cs), the main entrypoint into the framework, this interface is injected into user code to apply links to api resources. 
+- [`ILinksService`](src/RiskFirst.Hateoas/ILinksService.cs), the main entrypoint into the framework, this interface is injected into user code to apply links to api resources.
 - [`ILinkTransformationContextFactory`](src/RiskFirst.Hateoas/ILinkTransformationContextFactory.cs), controls how the transformation context is created during transformation for rel & href properies of links.
 - [`IRouteMap`](src/RiskFirst.Hateoas/IRouteMap.cs), controls how your API is indexed to allow links between routes.
 
@@ -358,7 +360,7 @@ controls how links are authorized during link condition evaluation.
 
 #### Upgrading from v1.0.x to v1.1.x
 
-The change from version 1.0.x to 1.1.x was mostly non-breaking, however if you have implemented any custom requirement handlers as described in the example above the signature of the base class `LinksHandler` changed slightly to remove the duplicate declaration of the generic type `TResource`. 
+The change from version 1.0.x to 1.1.x was mostly non-breaking, however if you have implemented any custom requirement handlers as described in the example above the signature of the base class `LinksHandler` changed slightly to remove the duplicate declaration of the generic type `TResource`.
 
 In v1.0.x your code may have looked like:
 

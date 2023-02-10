@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace RiskFirst.Hateoas.LinkConfigurationSample.Extensions
 {
@@ -16,7 +12,7 @@ namespace RiskFirst.Hateoas.LinkConfigurationSample.Extensions
                 var returnTypeInfo = returnType.GetTypeInfo();
                 if (returnTypeInfo.IsGenericType)
                 {
-                    if(returnType.GetGenericTypeDefinition().IsAssignableFrom(typeof(Task<>)))
+                    if (returnType.GetGenericTypeDefinition().IsAssignableFrom(typeof(Task<>)))
                     {
                         return GetTypePathInfo(returnType.GetGenericArguments()[0]);
                     }
@@ -28,7 +24,7 @@ namespace RiskFirst.Hateoas.LinkConfigurationSample.Extensions
 
         private static string GetTypePathInfo(Type type)
         {
-            if(type.IsConstructedGenericType)
+            if (type.IsConstructedGenericType)
             {
                 var genericParam = type.GetGenericArguments()[0];
                 return $"{type.Namespace.Urlify()}-{type.Name}/of/{GetTypePathInfo(genericParam)}";

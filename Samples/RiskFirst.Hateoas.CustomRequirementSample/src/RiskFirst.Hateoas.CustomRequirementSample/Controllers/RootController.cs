@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RiskFirst.Hateoas.CustomRequirementSample.Models;
 
-// For more information on enabling Web API for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace RiskFirst.Hateoas.CustomRequirementSample.Controllers
 {
+    [ApiController]
     [Route("api")]
-    public class RootController : Controller
+    public class RootController : ControllerBase
     {
         private readonly ILinksService linksService;
 
@@ -20,7 +15,7 @@ namespace RiskFirst.Hateoas.CustomRequirementSample.Controllers
         }
 
 
-        [HttpGet("",Name = "ApiRoot")]
+        [HttpGet("", Name = "ApiRoot")]
         public async Task<ApiInfo> GetApiInfo()
         {
             var info = new ApiInfo()

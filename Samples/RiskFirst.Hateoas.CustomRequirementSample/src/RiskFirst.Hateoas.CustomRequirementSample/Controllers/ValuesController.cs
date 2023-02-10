@@ -1,73 +1,69 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RiskFirst.Hateoas.CustomRequirementSample.Models;
-using RiskFirst.Hateoas.Models;
 using RiskFirst.Hateoas.CustomRequirementSample.Repository;
+using RiskFirst.Hateoas.Models;
 
-namespace RiskFirst.Hateoas.CustomRequirementSample.Controllers
+namespace RiskFirst.Hateoas.CustomRequirementSample.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class ValuesController : ControllerBase
 {
-    [Route("api/[controller]")]
-    public class ValuesController : Controller
+    private readonly IValuesRepository repo;
+    private readonly ILinksService linksService;
+
+    public ValuesController(IValuesRepository repo, ILinksService linksService)
     {
-        private readonly IValuesRepository repo;
-        private readonly ILinksService linksService;
+        this.repo = repo;
+        this.linksService = linksService;
+    }
 
-        public ValuesController(IValuesRepository repo, ILinksService linksService)
+    // GET api/values
+    [HttpGet(Name = "GetAllValuesRoute")]
+    public async Task<ItemsLinkContainer<ValueInfo>> Get()
+    {
+        var values = await GetAllValuesWithLinksAsync();
+
+        var result = new ItemsLinkContainer<ValueInfo>()
         {
-            this.repo = repo;
-            this.linksService = linksService;
-        }
+            Items = values
+        };
+        await linksService.AddLinksAsync(result);
+        return result;
+    }
 
-        // GET api/values
-        [HttpGet( Name = "GetAllValuesRoute")]
-        public async Task<ItemsLinkContainer<ValueInfo>> Get()
-        {
-            var values = await GetAllValuesWithLinksAsync();
+    // GET api/values/5
+    [HttpGet("{id}", Name = "GetValueByIdRoute")]
+    [Links(Policy = "FullInfoPolicy")]
+    public async Task<ValueInfo> Get(int id)
+    {
+        var value = await repo.GetValueAsync(id);
+        await linksService.AddLinksAsync(value);
+        return value;
+    }
 
-            var result = new ItemsLinkContainer<ValueInfo>()
-            {
-                Items = values
-            };
-            await linksService.AddLinksAsync(result);
-            return result;
-        }
+    // POST api/values
+    [HttpPost(Name = "InsertValueRoute")]
+    public void Post([FromBody] string value)
+    {
+    }
 
-        // GET api/values/5
-        [HttpGet("{id}", Name = "GetValueByIdRoute")]
-        [Links(Policy = "FullInfoPolicy")]
-        public async Task<ValueInfo> Get(int id)
-        {
-            var value = await repo.GetValueAsync(id);
-            await linksService.AddLinksAsync(value);
-            return value;
-        }
+    // PUT api/values/5
+    [HttpPut("{id}", Name = "UpdateValueRoute")]
+    public void Put(int id, [FromBody] string value)
+    {
+    }
 
-        // POST api/values
-        [HttpPost(Name = "InsertValueRoute")]
-        public void Post([FromBody]string value)
-        {
-        }
+    // DELETE api/values/5
+    [HttpDelete("{id}", Name = "DeleteValueRoute")]
+    public void Delete(int id)
+    {
+    }
 
-        // PUT api/values/5
-        [HttpPut("{id}",Name = "UpdateValueRoute")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE api/values/5
-        [HttpDelete("{id}",Name = "DeleteValueRoute")]
-        public void Delete(int id)
-        {
-        }
-
-        private async Task<List<ValueInfo>> GetAllValuesWithLinksAsync()
-        {
-            var values = await repo.GetAllValuesAsync();
-            values.ForEach(async x => await linksService.AddLinksAsync(x));
-            return values; ;
-        }
+    private async Task<List<ValueInfo>> GetAllValuesWithLinksAsync()
+    {
+        var values = await repo.GetAllValuesAsync();
+        values.ForEach(async x => await linksService.AddLinksAsync(x));
+        return values; ;
     }
 }

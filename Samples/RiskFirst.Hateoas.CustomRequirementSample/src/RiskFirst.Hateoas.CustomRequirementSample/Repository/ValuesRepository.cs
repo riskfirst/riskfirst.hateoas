@@ -1,8 +1,4 @@
-﻿using RiskFirst.Hateoas.CustomRequirementSample.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using RiskFirst.Hateoas.CustomRequirementSample.Models;
 
 namespace RiskFirst.Hateoas.CustomRequirementSample.Repository
 {
@@ -11,6 +7,7 @@ namespace RiskFirst.Hateoas.CustomRequirementSample.Repository
         Task<List<ValueInfo>> GetAllValuesAsync();
         Task<ValueInfo> GetValueAsync(int id);
     }
+
     public class ValuesRepository : IValuesRepository
     {
         private static IDictionary<int, string> values = new Dictionary<int, string>()
